@@ -10,10 +10,10 @@
 html{
     scroll-behavior: smooth;
 }
-.skills .skills-content{
+/* .skills .skills-content{
     margin-left: 2%;
 }
-
+ */
 /* custom scroll bar */
 ::-webkit-scrollbar {
     width: 10px;
