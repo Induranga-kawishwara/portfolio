@@ -40,11 +40,6 @@ section{
 .about, .skills, .Projects, .contact, footer{
     font-family: 'Poppins', sans-serif;
 }
-.skills .skills-content{
-
-  margin-left: 5%;
-}
-
 .contact, .Projects{
     color:#fff;
     background: #111;
