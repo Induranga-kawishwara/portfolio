@@ -309,7 +309,8 @@ section .title::after{
 .skills .skills-content .right .info{
     display: flex;
     margin-bottom: 5px;
-    align-items: center;
+    margin-left: -2%;
+/*     align-items: center; */
     justify-content: space-between;
 }
 .skills .skills-content .right span{
@@ -326,7 +327,7 @@ section .title::after{
     content: "";
     position: absolute;
     height: 100%;
-    left: 0;
+    left: -2%;
     top: 0;
     background: crimson;
 }
