@@ -640,13 +640,6 @@ footer span a:hover{
     .home .home-content .text-3{
         font-size: 27px;
     }
-    .skills .skills-content .right .info{
-        margin-left: -2%;
-    }
-    .skills .skills-content .right .line::before{
-        left: -2%;
-
-    }
     .about .about-content .right .text,
     .skills .skills-content .left .text{
         font-size: 19px;
