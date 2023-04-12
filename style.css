@@ -10,10 +10,26 @@
 html{
     scroll-behavior: smooth;
 }
-/* .skills .skills-content{
-    margin-left: 2%;
+
+
+
+
+.main{
+    visibility: visible;
 }
- */
+
+.new_main{
+    filter: blur(20px);
+    pointer-events: none;
+    user-select: none;
+}
+
+
+
+
+/* .skills .skills-content{
+    margin-left: 1%;
+} */
 /* custom scroll bar */
 ::-webkit-scrollbar {
     width: 10px;
@@ -237,10 +253,9 @@ section .title::after{
 .about .about-content .left img{
     height: 400px;
     width: 400px;
-    object-fit: cover;
-/*     border-radius: 6px; */
     border-radius: 50%;
-
+    object-fit: cover;
+    /* border-radius: 6px; */
 }
 .about .about-content .right{
     width: 55%;
@@ -272,6 +287,7 @@ section .title::after{
     color: crimson;
     background: none;
 }
+
 
 
 /* skills section styling */
@@ -358,7 +374,6 @@ section .title::after{
 .skills-content .right .r::before{
     width: 30%;
 }
-
 /* Projects section styling */
 .Projects .title::after{
     background: #111;
@@ -667,3 +682,130 @@ footer span a:hover{
         line-height: 38px;
     }
 }
+.popup{
+    width: 400px;
+    height: 400px;
+    background-color: crimson;
+    border-radius: 30px;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    border-style: solid;
+    border-color: white;
+    transform: translate(-50%,-50%) scale(0.1);
+    text-align: center;
+    padding: 0 30px 30px;
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4ms;
+    z-index: 1;
+}
+.new_pop{
+    top: 50%;
+    visibility: visible;
+    transform: translate(-50%,-50%) scale(1);
+
+}
+.popup img{
+    border: solid white;
+    border-radius: 50px;
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+}
+.popup h2{
+    font-size: 30px;
+    margin-top: 10%;  
+}
+.popup p{
+    margin-top: 15%;  
+}
+
+.popup button{
+    color: #fff;
+    display: block;
+    width: 160px!important;
+    margin-top: 20%; 
+    margin-left: 25%;
+    height: 45px;
+    outline: none;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    flex-wrap: nowrap;
+    background: rgb(31, 29, 29);
+    border: 2px solid rgb(34, 32, 32);
+    transition: all 0.3s ease;
+}
+
+.popup button:hover{
+    color: rgb(37, 34, 35);
+    font-weight: bold;
+    background: none;
+}
+
+.error{
+    width: 400px;
+    height: 400px;
+    background-color: rgb(31, 29, 29);
+    border-radius: 30px;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    border-style: solid;
+    border-color: rgb(255, 255, 255);
+    transform: translate(-50%,-50%) scale(0.1);
+    text-align: center;
+    padding: 0 30px 30px;
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4ms;
+    z-index: 1;
+}
+.new_error{
+    top: 50%;
+    visibility: visible;
+    transform: translate(-50%,-50%) scale(1);
+
+}
+.error img{
+    border: solid rgb(255, 255, 255);
+    border-radius: 50px;
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+}
+.error h2{
+    color: crimson;
+    font-size: 30px;
+    margin-top: 10%;  
+}
+.error p{
+    color: crimson;
+    margin-top: 15%;  
+}
+
+.error button{
+    color: #000000;
+    display: block;
+    width: 160px!important;
+    margin-top: 20%; 
+    margin-left: 25%;
+    height: 45px;
+    outline: none;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    flex-wrap: nowrap;
+    background: crimson;
+    border: 2px solid crimson;
+    transition: all 0.3s ease;
+}
+
+.error button:hover{
+    color: crimson;
+    font-weight: bold;
+    background: none;
+}
+
+
