@@ -16,6 +16,7 @@
 
 </head>
 <body>
+    <div class="main" id="main">
     <div class="scroll-up-btn">
         <i class="fas fa-angle-up"></i>
     </div>
@@ -25,8 +26,8 @@
             <ul class="menu">
                 <li><a href="#home" class="menu-btn">Home</a></li>
                 <li><a href="#about" class="menu-btn">About</a></li>
-                <li><a href="#skills" class="menu-btn">Skills</a></li>
                 <li><a href="#Projects" class="menu-btn">Projects</a></li>
+                <li><a href="#skills" class="menu-btn">Skills</a></li>
                 <li><a href="#contact" class="menu-btn">Contact</a></li>
             </ul>
             <div class="menu-btn">
@@ -53,7 +54,7 @@
             <h2 class="title">About me</h2>
             <div class="about-content">
                 <div class="column left">
-                    <img src="images/photo.jpeg" alt="">
+                    <img src="images/photo.jpeg" alt="my picture">
                 </div>
                 <div class="column right">
                     <div class="text">I'm Induranga and I'm a <span class="typing-2"></span></div>
@@ -254,35 +255,55 @@
                 </div>
                 <div class="column right">
                     <div class="text">Message me</div>
-                    <form action="#">
+                    <form action="javascript:sendemail()" method="POST" id="form" autocomplete="off">
                         <div class="fields">
                             <div class="field name">
-                                <input type="text" placeholder="Name" required>
+                                <input type="text" name="Name" id="Name" required="required" placeholder="Name">
                             </div>
                             <div class="field email">
-                                <input type="email" placeholder="Email" required>
+                                <input type="email" name="Email" id="Email" required="required"  placeholder="Email" >
                             </div>
                         </div>
                         <div class="field">
-                            <input type="text" placeholder="Subject" required>
+                            <input type="text" name="Subject" id="Subject" required="required" placeholder="Subject" >
                         </div>
                         <div class="field textarea">
-                            <textarea cols="30" rows="10" placeholder="Message.." required></textarea>
+                            <textarea cols="30" rows="10"  name="message" id="message" required="required" placeholder="Message.." ></textarea>
                         </div>
                         <div class="button-area">
-                            <button type="submit">Send message</button>
+                            <button  type="submit" value="Submit" >Send message</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </section>
+    </div>
+    <!-- Thanks popup window -->
+    <div class="popup" id="popup">
+        <img src="images/Right.png" alt="Right_Sign">
+        <h2>THANK YOU !!</h2>
+        <p>Thank You for Contact Me<br>Your message has been sent successfully!</p>
+        <button type="submit" onclick="Okay()">OK</button>
+    </div>
+
+    <!-- Error popup window -->
+    <div class="error" id="error">
+        <img src="images/wrong.png" alt="Error_Sign">
+        <h2>Error While Sending Message</h2>
+        <p> Check Your connection</p>
+        <button type="submit" onclick="error()">OK</button>
+    </div>
+    
 
     <!-- footer section start -->
     <footer>
         <span>Created By <span style="color: red;">Induranga Kawishwara</span> |  2023 All rights reserved.</span>
     </footer>
 
+
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script src="popup.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
