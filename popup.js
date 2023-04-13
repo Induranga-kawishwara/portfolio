@@ -58,6 +58,5 @@ function error(){
     let popup = document.getElementById("error");
     main.classList.remove("new_main");
     popup.classList.remove("new_error");
-    window.location.reload();
 }
   
