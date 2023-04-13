@@ -782,7 +782,7 @@ footer span a:hover{
 @media (max-width: 500px) {
     .error, .popup{
         width: 300px;
-        height: 320px;
+        height: 330px;
     }
 
     .error button , .popup  button{
