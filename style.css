@@ -194,8 +194,7 @@ section .title::after{
 /* home section styling */
 
 #particles-js{
-
-    height: 100vh;
+    height: 110vh;
     background-color: #000000;
     background-image: url('');
     background-size: cover;
