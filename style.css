@@ -191,21 +191,28 @@ section .title::after{
     filter: brightness(90%);
 }
 
-
 /* home section styling */
-.home{
-    display: flex;
-    background: url("images/banner.gif") no-repeat center;
-    height: 100vh;
-    color: #fff;
-    min-height: 500px;
+
+#particles-js{
+
+    height: 100%;
+    width: 100%;
+    background-color: #000000;
+    background-image: url('');
     background-size: cover;
-    background-attachment: fixed;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    color: #fff;
     font-family: 'Ubuntu', sans-serif;
+    
 }
+
+
 .home .max-width{
-  width: 100%;
-  display: flex;
+    margin-top: 15%;
+    position: absolute;
+    width: 100%;
+    margin-left: 10%;
 }
 .home .max-width .row{
   margin-right: 0;
@@ -216,7 +223,7 @@ section .title::after{
 .home .home-content .text-2{
     font-size: 75px;
     font-weight: 600;
-    margin-left: -3px;
+    /* margin-left: -3px; */
 }
 .home .home-content .text-3{
     font-size: 40px;
