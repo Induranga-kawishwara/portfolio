@@ -197,7 +197,9 @@ section .title::after{
     height: 105vh;
     background-color: #000000;
     background-image: url('');
+    min-height: 500px;
     background-size: cover;
+    background-attachment: fixed;
     background-position: 50% 50%;
     background-repeat: no-repeat;
     color: #fff;
