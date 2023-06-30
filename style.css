@@ -194,12 +194,12 @@ section .title::after{
 /* home section styling */
 
 #particles-js{
-
-    height: 100%;
-    width: 100%;
+    height: 105vh;
     background-color: #000000;
     background-image: url('');
+    min-height: 500px;
     background-size: cover;
+    background-attachment: fixed;
     background-position: 50% 50%;
     background-repeat: no-repeat;
     color: #fff;
@@ -687,6 +687,27 @@ footer span a{
 }
 footer span a:hover{
     text-decoration: underline;
+}
+
+
+  /* Social media icon styles */
+  .footer .social-icons {
+    margin-top: 20px;
+    
+
+  }
+
+  .footer .social-icons a {
+    display: inline-block;
+    font-size: 25px;
+
+    
+  }
+
+  .social-icons a:hover{
+    color: blue;
+    font-size: 30px;
+
 }
 
 
