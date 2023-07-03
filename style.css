@@ -212,7 +212,6 @@ section .title::after{
     margin-top: 15%;
     position: absolute;
     width: 100%;
-    margin-left: 10%;
 }
 .home .max-width .row{
   margin-right: 0;
