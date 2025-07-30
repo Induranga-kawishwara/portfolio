@@ -4,7 +4,7 @@ This repository contains the source code for my personal portfolio website. It's
 
 ## Live Demo
 
-You can view the live version of my portfolio here: **[your-portfolio-link.com](https://induranga-kawishwara.github.io/portfolio/)**
+You can view the live version of my portfolio here: **[my-portfolio-link](https://induranga-kawishwara.github.io/portfolio/)**
 
 ## Technologies Used
 
