@@ -19,7 +19,7 @@ $(document).ready(function () {
     $(".menu-btn i").toggleClass("active");
   });
 
-  /* ---------------- Typed text (roles) ---------------- */
+  /* ---------------- Typed text ---------------- */
   function startTyping(roles) {
     const list =
       Array.isArray(roles) && roles.length ? roles : ["Software Engineer"];
@@ -37,12 +37,13 @@ $(document).ready(function () {
     });
   }
 
-  /* ---------------- Constants ---------------- */
-  const LOCAL_JSON = "assets/data/portfolio.json"; // JSON-first
-  const GH_USER = "Induranga-kawishwara"; // GitHub fallback
+  /* ---------------- Consts ---------------- */
+  const LOCAL_JSON = "assets/data/portfolio.json";
+  const GH_USER = "Induranga-kawishwara";
   const MAX_REPOS = 10;
   const MAX_VISIBLE_CHIPS = 6;
   const $carousel = $("#github-carousel");
+  let owlInitialized = false;
 
   const BASE_HEADERS = {
     Accept:
@@ -94,7 +95,7 @@ $(document).ready(function () {
     !txt ? "" : txt.length > n ? txt.slice(0, n - 1) + "…" : txt;
   const displayName = (n) => (n || "").replace(/[_-]+/g, " ").trim();
 
-  /* ---------------- Pretty cover fallback ---------------- */
+  /* ----------- nice banner fallback ----------- */
   function hashCode(str) {
     let h = 0;
     for (let i = 0; i < str.length; i++) {
@@ -132,7 +133,7 @@ $(document).ready(function () {
     return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
   }
 
-  /* ---------------- Chips ---------------- */
+  /* ----------- chips ----------- */
   function badges(langs, fws) {
     const total = (langs?.length || 0) + (fws?.length || 0);
     const extra = total > MAX_VISIBLE_CHIPS ? " scrollbox" : "";
@@ -145,26 +146,48 @@ $(document).ready(function () {
     return `<div class="tags${extra}">${langBadges}${fwBadges}</div>`;
   }
 
-  /* ---------------- Apply About/Profile from JSON ---------------- */
+  /* ----------- Owl helpers ----------- */
+  function initOwl() {
+    $carousel.owlCarousel({
+      margin: 20,
+      loop: true,
+      autoplay: true,
+      autoplayTimeout: 2200,
+      autoplayHoverPause: true,
+      responsive: {
+        0: { items: 1, nav: false },
+        600: { items: 2, nav: false },
+        1000: { items: 3, nav: false },
+      },
+    });
+    owlInitialized = true;
+  }
+  function mountCards(htmlArray) {
+    if (owlInitialized) {
+      // destroy + unwrap owl structure
+      $carousel.trigger("destroy.owl.carousel");
+      $carousel.removeClass("owl-loaded");
+      $carousel.find(".owl-stage-outer").children().unwrap();
+      owlInitialized = false;
+    }
+    $carousel.empty();
+    htmlArray.forEach((h) => $carousel.append(h));
+    initOwl();
+  }
+
+  /* ----------- About from JSON ----------- */
   function applyProfileAndAbout(data) {
     if (!data) return;
-
-    // Name + roles
     if (data.profile?.name) {
       $(".home .text-2").text(data.profile.name);
       $(".js-name").text(data.profile.name.split(" ")[0] || data.profile.name);
     }
     startTyping(data.profile?.roles);
-
-    // Photo & CV
     if (data.profile?.photo) $(".js-photo").attr("src", data.profile.photo);
     if (data.profile?.cv_url)
       $(".home a[href*='drive.google']").attr("href", data.profile.cv_url);
-
-    // Bio
     if (data.about?.bio) $(".js-bio").text(data.about.bio);
 
-    // Links
     const $links = $(".js-about-links").empty();
     const mk = (href, label) =>
       `<a href="${href}" target="_blank" class="about-link">${label}</a>`;
@@ -174,7 +197,7 @@ $(document).ready(function () {
     if (data.links?.github) $links.append(mk(data.links.github, "GitHub"));
   }
 
-  /* ---------------- JSON Projects ---------------- */
+  /* ----------- JSON project card ----------- */
   function projectCardFromJSON(p) {
     const title = p.title || "Untitled";
     const cover = p.cover || gradientPlaceholder(title);
@@ -197,7 +220,7 @@ $(document).ready(function () {
                    )}';" />
             </div>
             <div class="text">${title}</div>
-            <div class="repo-meta">★ ${stars} ${updated ? `• Updated ${updated}` : ""}</div>
+            <div class="repo-meta">★ ${stars}${updated ? ` • Updated ${updated}` : ""}</div>
             ${live}
             <div class="repo-desc">${desc}</div>
             ${badges(p.languages || [], p.frameworks || [])}
@@ -207,7 +230,8 @@ $(document).ready(function () {
     `;
   }
 
-  async function loadLocalJSON() {
+  /* ----------- Render JSON first (instant) ----------- */
+  async function renderFromLocalJSON() {
     const res = await fetch(LOCAL_JSON, { cache: "no-store" });
     if (!res.ok) throw new Error("No local JSON");
     const data = await res.json();
@@ -215,20 +239,18 @@ $(document).ready(function () {
     applyProfileAndAbout(data);
 
     const projects = Array.isArray(data.projects) ? data.projects : [];
-    if (!projects.length) return { usedProjects: false };
-
-    $carousel.empty();
-    projects.forEach((p) => $carousel.append(projectCardFromJSON(p)));
-    return { usedProjects: true };
+    if (projects.length) {
+      const html = projects.map(projectCardFromJSON);
+      mountCards(html); // show placeholders NOW
+    }
+    return projects.length > 0;
   }
 
-  /* ---------------- GitHub Fallback (show ALL languages) ---------------- */
+  /* ----------- GitHub fallback/refresh (show ALL langs) ----------- */
   async function fetchWithRetries(url, maxAttempts = 4) {
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const res = await fetch(url, { headers: BASE_HEADERS });
       if (res.ok) return res;
-
-      // Abuse/rate limits: 403/429 -> exponential backoff with jitter
       if (
         (res.status === 403 || res.status === 429) &&
         attempt < maxAttempts - 1
@@ -244,16 +266,13 @@ $(document).ready(function () {
     }
     throw new Error("GitHub retries exceeded");
   }
-
   const repoImage = (owner, name) =>
     `https://opengraph.githubassets.com/1/${owner}/${name}`;
-
   function isMetaRepo(r) {
-    const name = (r.name || "").toLowerCase();
-    const user = GH_USER.toLowerCase();
-    return name === user || name === ".github" || name === `${user}.github.io`;
+    const n = (r.name || "").toLowerCase(),
+      u = GH_USER.toLowerCase();
+    return n === u || n === ".github" || n === `${u}.github.io`;
   }
-
   function frameworksFromTopics(topics) {
     if (!Array.isArray(topics)) return [];
     const set = new Set();
@@ -263,7 +282,6 @@ $(document).ready(function () {
     });
     return Array.from(set);
   }
-
   function repoCard(repo) {
     const title = displayName(repo.name);
     const cover = repoImage(repo.owner.login, repo.name);
@@ -301,7 +319,6 @@ $(document).ready(function () {
       </div>
     `;
   }
-
   async function fetchReposWithTopics() {
     const url = `https://api.github.com/search/repositories?q=user:${encodeURIComponent(
       GH_USER
@@ -310,35 +327,25 @@ $(document).ready(function () {
     const data = await res.json();
     return Array.isArray(data.items) ? data.items : [];
   }
-
-  // Fetch ALL languages reliably, even under rate limits
   async function addLanguages(repos) {
     for (let i = 0; i < repos.length; i++) {
       const r = repos[i];
       try {
         const res = await fetchWithRetries(r.languages_url);
-        const langMap = await res.json(); // { language: bytes }
+        const langMap = await res.json();
         const entries = Object.entries(langMap)
           .sort((a, b) => b[1] - a[1])
           .filter(([lang]) => !NOISE_LANGS.has(lang));
-
-        // Keep *all* languages (not just the primary)
         r._languages = entries.map(([lang]) => lang);
-
-        // If GitHub returns empty map, fallback to primary language
         if (!r._languages.length && r.language) r._languages = [r.language];
-      } catch (err) {
-        // On failure, fallback to the primary language (what you were seeing before)
+      } catch {
         r._languages = r.language ? [r.language] : [];
       }
-
-      // Be polite to avoid abuse detection
-      await sleep(jitter(450)); // ~450–650ms between calls
+      await sleep(jitter(450));
     }
     return repos;
   }
-
-  async function loadGitHubProjects() {
+  async function refreshFromGitHub() {
     let repos = await fetchReposWithTopics();
     repos = repos
       .filter((r) => !r.fork && !r.archived && !r.is_template && !isMetaRepo(r))
@@ -348,30 +355,12 @@ $(document).ready(function () {
           new Date(b.updated_at) - new Date(a.updated_at)
       )
       .slice(0, MAX_REPOS);
-
     await addLanguages(repos);
-
-    $carousel.empty();
-    repos.forEach((r) => $carousel.append(repoCard(r)));
+    const html = repos.map(repoCard);
+    mountCards(html); // REPLACE JSON placeholders with live GitHub cards
   }
 
-  /* ---------------- Carousel ---------------- */
-  function initOwl() {
-    $carousel.owlCarousel({
-      margin: 20,
-      loop: true,
-      autoplay: true,
-      autoplayTimeout: 2200,
-      autoplayHoverPause: true,
-      responsive: {
-        0: { items: 1, nav: false },
-        600: { items: 2, nav: false },
-        1000: { items: 3, nav: false },
-      },
-    });
-  }
-
-  // enable wheel scroll inside multi-row chip box
+  /* ----------- allow wheel scroll inside tags box ----------- */
   $(document).on("wheel", ".tags", function (e) {
     const el = this,
       evt = e.originalEvent;
@@ -384,15 +373,22 @@ $(document).ready(function () {
     }
   });
 
-  /* ---------------- Boot ---------------- */
+  /* ----------- Boot ----------- */
   (async function init() {
     try {
-      const result = await loadLocalJSON(); // fills About + (maybe) projects
-      if (!result.usedProjects) await loadGitHubProjects();
+      // Render local JSON immediately (placeholders) — also fills About
+      await renderFromLocalJSON();
     } catch {
-      startTyping(); // roles fallback
-      await loadGitHubProjects();
+      // If JSON missing, still start typing defaults
+      startTyping();
     }
-    initOwl();
+
+    // Start GitHub in background and replace when ready
+    try {
+      await refreshFromGitHub();
+    } catch (e) {
+      // If GitHub fails, keep JSON projects
+      console.warn("GitHub load failed; keeping JSON projects.", e);
+    }
   })();
 });

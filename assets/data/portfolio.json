@@ -19,5 +19,40 @@
   "skills": {
     "backend": ["Java", "Python", "PHP", "MySQL", "R"],
     "frontend": ["HTML5", "CSS3", "JavaScript"]
-  }
+  },
+  "projects": [
+    {
+      "title": "Library Management System",
+      "repo": "https://github.com/Induranga-kawishwara/Library_Management_System",
+      "live": "",
+      "cover": "assets/images/covers/library.jpg",
+      "updated": "2025-07-30",
+      "stars": 3,
+      "description": "Manage books, members, loans, and fines with a clean desktop UI.",
+      "languages": ["Java"],
+      "frameworks": []
+    },
+    {
+      "title": "Ceylon Dream Tour",
+      "repo": "https://github.com/Induranga-kawishwara/Ceylon_Dream_Tour",
+      "live": "https://induranga-kawishwara.github.io/Ceylon_Dream_Tour/",
+      "cover": "assets/images/covers/ceylon.jpg",
+      "updated": "2025-07-30",
+      "stars": 2,
+      "description": "Tourism website showcasing destinations and packages.",
+      "languages": ["HTML", "CSS", "JavaScript"],
+      "frameworks": ["Bootstrap"]
+    },
+    {
+      "title": "ShopFinder",
+      "repo": "https://github.com/Induranga-kawishwara/ShopFinder",
+      "live": "",
+      "cover": "assets/images/covers/shopfinder.jpg",
+      "updated": "2025-07-30",
+      "stars": 2,
+      "description": "Locate nearby shops with basic search and filter.",
+      "languages": ["Jupyter Notebook"],
+      "frameworks": []
+    }
+  ]
 }
