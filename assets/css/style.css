@@ -131,7 +131,6 @@ section .title::after {
 .navbar.sticky .logo a span {
   color: #fff;
 }
-
 .navbar .menu li {
   list-style: none;
   display: inline-block;
@@ -242,8 +241,13 @@ section .title::after {
 ========================================================= */
 .about .title::after {
   content: "Who I Am";
+  background: #000000;
+}
+/* Make underline visible on dark bg */
+.about .title::before {
   background: #fff;
 }
+
 .about .about-content {
   display: grid;
   grid-template-columns: 340px 1fr;
@@ -313,9 +317,12 @@ section .title::after {
 ========================================================= */
 .skills .title::after {
   content: "What I Know";
+  background: #000000;
+}
+/* Make underline visible on dark bg */
+.skills .title::before {
   background: #fff;
 }
-
 .skills-content .columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(260px, 1fr));
@@ -334,7 +341,6 @@ section .title::after {
   transform: translateY(-5px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
 }
-
 .skill-header {
   text-align: center;
   margin-bottom: 28px;
@@ -478,8 +484,7 @@ section .title::after {
   content: "What I Did";
   background: #111;
 }
-
-/* make owl items equal height */
+/* equal height items */
 .Projects .carousel .owl-stage {
   display: flex;
 }
@@ -490,7 +495,6 @@ section .title::after {
 :root {
   --card-height: 480px;
 }
-
 .Projects .carousel .card {
   background: #222;
   border-radius: 16px;
@@ -514,7 +518,6 @@ section .title::after {
   gap: 8px;
   width: 100%;
 }
-
 .Projects .carousel .card .text {
   font-size: 24px;
   font-weight: 600;
@@ -580,12 +583,12 @@ section .title::after {
   transform: scale(1.02);
   transition: transform 0.35s ease;
 }
-/* hide legacy circular img rule if any */
+/* hide legacy circle img */
 .Projects .carousel .card > a .box > img {
   display: none !important;
 }
 
-/* Chips (languages + frameworks) */
+/* Chips */
 .tags {
   margin-top: auto;
   display: flex;
@@ -602,12 +605,11 @@ section .title::after {
   max-height: 96px;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 8px 8px;
+  padding: 8px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.06);
   scrollbar-gutter: stable both-edges;
-  gap: 12px 14px;
 }
 .tag {
   white-space: nowrap;
@@ -622,8 +624,13 @@ section .title::after {
 .tag-fw {
   border-color: rgba(220, 20, 60, 0.6);
 }
+/* Improve contrast on hover card */
+.Projects .carousel .card:hover .tag {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+}
 
-/* Scrollbar for tag box */
+/* Tag scrollbars */
 .tags.scrollbox::-webkit-scrollbar {
   width: 6px;
 }
@@ -769,7 +776,7 @@ section .title::after {
 }
 .contact textarea {
   min-height: 140px;
-  resize: vertical;
+  resize: none;
   line-height: 1.45;
 }
 
@@ -797,8 +804,16 @@ section .title::after {
   box-shadow: none;
 }
 
+/* Keyboard focus for links/buttons */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid rgba(220, 20, 60, 0.65);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
 /* =========================================================
-   Popups (success / error)
+   Popups
 ========================================================= */
 .popup,
 .error {
@@ -912,21 +927,20 @@ footer {
 }
 footer span a {
   color: crimson;
-  text-decoration: none;
 }
 footer span a:hover {
   text-decoration: underline;
 }
-.footer .social-icons {
-  margin-top: 20px;
+footer .social-icons {
+  margin-top: 8px;
 }
-.footer .social-icons a {
+footer .social-icons a {
   display: inline-block;
-  font-size: 25px;
+  font-size: 22px;
+  color: #111;
 }
-.social-icons a:hover {
-  color: blue;
-  font-size: 30px;
+footer .social-icons a:hover {
+  color: crimson;
 }
 
 /* =========================================================

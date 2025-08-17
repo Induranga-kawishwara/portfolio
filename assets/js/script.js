@@ -1,9 +1,9 @@
-// assets/js/script.js
 $(document).ready(function () {
   /* ---------------- NAV + SCROLL ---------------- */
   $(window).on("scroll", function () {
     if (this.scrollY > 20) $(".navbar").addClass("sticky");
     else $(".navbar").removeClass("sticky");
+
     if (this.scrollY > 500) $(".scroll-up-btn").addClass("show");
     else $(".scroll-up-btn").removeClass("show");
   });
@@ -42,6 +42,10 @@ $(document).ready(function () {
   const GH_USER = "Induranga-kawishwara";
   const MAX_REPOS = 10;
   const MAX_VISIBLE_CHIPS = 6;
+
+  // OPTIONAL token (improves rate limit). Keep empty if you don't want it.
+  const GITHUB_TOKEN = ""; // e.g. "ghp_xxx"
+
   const $carousel = $("#github-carousel");
   let owlInitialized = false;
 
@@ -49,6 +53,7 @@ $(document).ready(function () {
     Accept:
       "application/vnd.github+json, application/vnd.github.mercy-preview+json",
     "X-GitHub-Api-Version": "2022-11-28",
+    ...(GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {}),
   };
 
   const NOISE_LANGS = new Set([
@@ -95,7 +100,7 @@ $(document).ready(function () {
     !txt ? "" : txt.length > n ? txt.slice(0, n - 1) + "…" : txt;
   const displayName = (n) => (n || "").replace(/[_-]+/g, " ").trim();
 
-  /* ----------- nice banner fallback ----------- */
+  /* ----------- gradient banner fallback ----------- */
   function hashCode(str) {
     let h = 0;
     for (let i = 0; i < str.length; i++) {
@@ -154,11 +159,7 @@ $(document).ready(function () {
       autoplay: true,
       autoplayTimeout: 2200,
       autoplayHoverPause: true,
-      responsive: {
-        0: { items: 1, nav: false },
-        600: { items: 2, nav: false },
-        1000: { items: 3, nav: false },
-      },
+      responsive: { 0: { items: 1 }, 600: { items: 2 }, 1000: { items: 3 } },
     });
     owlInitialized = true;
   }
@@ -174,7 +175,7 @@ $(document).ready(function () {
     initOwl();
   }
 
-  /* ----------- ICONS for skills ----------- */
+  /* ----------- ICON map for skills ----------- */
   const ICONS = {
     java: "fab fa-java",
     python: "fab fa-python",
@@ -222,11 +223,8 @@ $(document).ready(function () {
     if (!skillsObj || typeof skillsObj !== "object") return;
     const $root = $(".js-skills").empty();
 
-    // Keep insertion order of keys as in JSON
-    const entries = Object.entries(skillsObj);
-
     const $columns = $('<div class="columns"></div>');
-    entries.forEach(([category, items]) => {
+    Object.entries(skillsObj).forEach(([category, items]) => {
       const title = category.charAt(0).toUpperCase() + category.slice(1);
       const $col = $('<div class="column"></div>');
       const $header = $(`
@@ -256,15 +254,15 @@ $(document).ready(function () {
   function applyProfileAndAbout(data) {
     if (!data) return;
 
-    // Home + About
     if (data.profile?.name) {
       $(".home .text-2").text(data.profile.name);
-      $(".js-name").text(data.profile.name.split(" ")[0] || data.profile.name);
+      const first = data.profile.name.split(" ")[0] || data.profile.name;
+      $(".js-first-name").text(first);
     }
     startTyping(data.profile?.roles);
+
     if (data.profile?.photo) $(".js-photo").attr("src", data.profile.photo);
 
-    // Prefer .js-cv-link if present, fallback to existing anchor
     if (data.profile?.cv_url) {
       const $cv = $(".js-cv-link").length
         ? $(".js-cv-link")
@@ -276,13 +274,12 @@ $(document).ready(function () {
 
     const $links = $(".js-about-links").empty();
     const mk = (href, label) =>
-      `<a href="${href}" target="_blank" class="about-link">${label}</a>`;
+      `<a href="${href}" target="_blank" rel="noopener" class="about-link">${label}</a>`;
     if (data.links?.linkedin)
       $links.append(mk(data.links.linkedin, "LinkedIn"));
     if (data.links?.medium) $links.append(mk(data.links.medium, "Medium"));
     if (data.links?.github) $links.append(mk(data.links.github, "GitHub"));
 
-    // Skills
     if (data.skills) renderSkills(data.skills);
   }
 
@@ -335,33 +332,54 @@ $(document).ready(function () {
     return projects.length > 0;
   }
 
-  /* ----------- GitHub fallback/refresh (show ALL langs) ----------- */
-  async function fetchWithRetries(url, maxAttempts = 4) {
+  /* ----------- robust fetch with backoff ----------- */
+  async function fetchWithRetries(url, maxAttempts = 5) {
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const res = await fetch(url, { headers: BASE_HEADERS });
       if (res.ok) return res;
-      if (
-        (res.status === 403 || res.status === 429) &&
-        attempt < maxAttempts - 1
-      ) {
+
+      if (res.status === 403 || res.status === 429) {
         const retryAfter = Number(res.headers.get("Retry-After"));
-        const wait = retryAfter
-          ? retryAfter * 1000
-          : jitter(600 * Math.pow(2, attempt));
+        const remaining = Number(res.headers.get("x-ratelimit-remaining"));
+        const resetAt = Number(res.headers.get("x-ratelimit-reset")) * 1000;
+        let wait = 0;
+        if (retryAfter) {
+          wait = retryAfter * 1000;
+        } else if (!isNaN(remaining) && remaining === 0 && !isNaN(resetAt)) {
+          wait = Math.max(1500, resetAt - Date.now() + 500);
+        } else {
+          wait = 1200 + attempt * 800 + Math.floor(Math.random() * 300);
+        }
         await sleep(wait);
+        continue;
+      }
+
+      if (res.status >= 500 && res.status < 600) {
+        await sleep(800 + attempt * 400);
         continue;
       }
       throw new Error(`GitHub error ${res.status}`);
     }
     throw new Error("GitHub retries exceeded");
   }
+
+  /* ----------- GitHub helpers ----------- */
   const repoImage = (owner, name) =>
     `https://opengraph.githubassets.com/1/${owner}/${name}`;
+
   function isMetaRepo(r) {
-    const n = (r.name || "").toLowerCase(),
-      u = GH_USER.toLowerCase();
+    const n = (r.name || "").toLowerCase();
+    const u = GH_USER.toLowerCase();
     return n === u || n === ".github" || n === `${u}.github.io`;
   }
+
+  async function fetchRepoTopics(owner, name) {
+    const url = `https://api.github.com/repos/${owner}/${name}/topics`;
+    const res = await fetchWithRetries(url);
+    const data = await res.json();
+    return Array.isArray(data.names) ? data.names : [];
+  }
+
   function frameworksFromTopics(topics) {
     if (!Array.isArray(topics)) return [];
     const set = new Set();
@@ -371,6 +389,7 @@ $(document).ready(function () {
     });
     return Array.from(set);
   }
+
   function repoCard(repo) {
     const title = displayName(repo.name);
     const cover = repoImage(repo.owner.login, repo.name);
@@ -380,7 +399,7 @@ $(document).ready(function () {
       repo.updated_at || repo.pushed_at || repo.created_at
     ).toLocaleDateString();
     const langs = repo._languages || [];
-    const fws = frameworksFromTopics(repo.topics || []);
+    const fws = frameworksFromTopics(repo._topics || repo.topics || []);
     const rawDesc = repo.description || "";
     const desc = truncate(rawDesc.replace(/\blive\s*site\b/gi, "").trim(), 120);
     const live =
@@ -389,6 +408,7 @@ $(document).ready(function () {
       !/^https?:\/\/github\.com/i.test(repo.homepage)
         ? `<a href="${repo.homepage}" target="_blank" rel="noopener" class="live-link">Live Site</a>`
         : "";
+
     return `
       <div class="card">
         <a href="${
@@ -408,6 +428,7 @@ $(document).ready(function () {
       </div>
     `;
   }
+
   async function fetchReposWithTopics() {
     const url = `https://api.github.com/search/repositories?q=user:${encodeURIComponent(
       GH_USER
@@ -416,24 +437,32 @@ $(document).ready(function () {
     const data = await res.json();
     return Array.isArray(data.items) ? data.items : [];
   }
-  async function addLanguages(repos) {
+
+  async function enrichRepos(repos) {
     for (let i = 0; i < repos.length; i++) {
       const r = repos[i];
       try {
-        const res = await fetchWithRetries(r.languages_url);
-        const langMap = await res.json();
+        // Languages
+        const langRes = await fetchWithRetries(r.languages_url);
+        const langMap = await langRes.json();
         const entries = Object.entries(langMap)
           .sort((a, b) => b[1] - a[1])
           .filter(([lang]) => !NOISE_LANGS.has(lang));
         r._languages = entries.map(([lang]) => lang);
         if (!r._languages.length && r.language) r._languages = [r.language];
+
+        // Topics
+        r._topics = await fetchRepoTopics(r.owner.login, r.name);
       } catch {
         r._languages = r.language ? [r.language] : [];
+        r._topics = [];
       }
-      await sleep(jitter(450));
+      // polite delay for unauthenticated use
+      await sleep(1300 + Math.floor(Math.random() * 600));
     }
     return repos;
   }
+
   async function refreshFromGitHub() {
     let repos = await fetchReposWithTopics();
     repos = repos
@@ -444,9 +473,10 @@ $(document).ready(function () {
           new Date(b.updated_at) - new Date(a.updated_at)
       )
       .slice(0, MAX_REPOS);
-    await addLanguages(repos);
+
+    await enrichRepos(repos);
     const html = repos.map(repoCard);
-    mountCards(html); // REPLACE JSON placeholders with live GitHub cards
+    mountCards(html);
   }
 
   /* ----------- allow wheel scroll inside tags box ----------- */
@@ -467,11 +497,11 @@ $(document).ready(function () {
     try {
       await renderFromLocalJSON(); // About + Skills + JSON projects
     } catch {
-      startTyping(); // still run typing with defaults
+      startTyping(); // fallback typing
     }
 
     try {
-      await refreshFromGitHub(); // replace cards with live GitHub data
+      await refreshFromGitHub(); // replace with live GitHub cards
     } catch (e) {
       console.warn("GitHub load failed; keeping JSON projects.", e);
     }

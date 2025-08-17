@@ -6,9 +6,7 @@
     "photo": "assets/images/photo.png"
   },
   "about": {
-    "headline": "Second-year Software Engineering student",
-    "bio": "I am a second-year student studying software engineering, and I have a tremendous interest in technology and its ability to solve issues in the real world. With a strong background in JavaScript, Java, Python and web technologies, I understand OOP and software development practices. I’m always learning new tools and languages to stay current with modern tech.",
-    "location": "Pannipitiya, Sri Lanka"
+    "bio": "I am a second-year student studying software engineering, with a strong interest in using technology to solve real-world problems. My background spans JavaScript, Java, Python and modern web tech. I understand OOP and software development practices and I’m always learning new tools to stay current."
   },
   "links": {
     "github": "https://github.com/Induranga-kawishwara",
@@ -24,36 +22,32 @@
   },
   "projects": [
     {
-      "title": "Library Management System",
-      "repo": "https://github.com/Induranga-kawishwara/Library_Management_System",
-      "live": "",
-      "cover": "assets/images/covers/library.jpg",
-      "updated": "2025-07-30",
-      "stars": 3,
-      "description": "Manage books, members, loans, and fines with a clean desktop UI.",
-      "languages": ["Java"],
-      "frameworks": []
-    },
-    {
       "title": "Ceylon Dream Tour",
       "repo": "https://github.com/Induranga-kawishwara/Ceylon_Dream_Tour",
-      "live": "https://induranga-kawishwara.github.io/Ceylon_Dream_Tour/",
-      "cover": "assets/images/covers/ceylon.jpg",
+      "cover": "",
       "updated": "2025-07-30",
       "stars": 2,
-      "description": "Tourism website showcasing destinations and packages.",
-      "languages": ["HTML", "CSS", "JavaScript"],
-      "frameworks": ["Bootstrap"]
+      "live": "",
+      "description": "Travel planning website prototype.",
+      "languages": ["HTML"],
+      "frameworks": []
     },
     {
       "title": "ShopFinder",
       "repo": "https://github.com/Induranga-kawishwara/ShopFinder",
-      "live": "",
-      "cover": "assets/images/covers/shopfinder.jpg",
       "updated": "2025-07-30",
       "stars": 2,
-      "description": "Locate nearby shops with basic search and filter.",
+      "description": "Find nearby shops; small maps demo.",
       "languages": ["Jupyter Notebook"],
+      "frameworks": []
+    },
+    {
+      "title": "idsprinting",
+      "repo": "https://github.com/Induranga-kawishwara/idsprinting",
+      "updated": "2025-07-30",
+      "stars": 2,
+      "description": "Printing service site.",
+      "languages": ["JavaScript"],
       "frameworks": []
     }
   ]
