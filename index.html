@@ -11,13 +11,16 @@
     <link rel="stylesheet" href="assets/css/style.css" />
 
     <!-- Fonts / Icons / Carousel -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      referrerpolicy="no-referrer"
     />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+      referrerpolicy="no-referrer"
     />
   </head>
   <body>
@@ -41,20 +44,21 @@
         </div>
       </nav>
 
-      <!-- Home (name/roles/CV filled from JSON) -->
+      <!-- Home -->
       <section class="home" id="particles-js">
         <div class="max-width">
           <div class="home-content">
             <div class="text-1">Hello, my name is</div>
-            <div class="text-2"></div>
-            <!-- profile.name -->
+            <div class="text-2 js-name">Induranga Kawishwara</div>
             <div class="text-3">And I'm a <span class="typing"></span></div>
-            <a class="js-cv-link" href="#" target="_blank">Download CV</a>
+            <a class="js-cv-link" href="#" target="_blank" rel="noopener"
+              >Download CV</a
+            >
           </div>
         </div>
       </section>
 
-      <!-- About (driven by portfolio.json) -->
+      <!-- About (purely from JSON) -->
       <section class="about" id="about">
         <div class="max-width">
           <h2 class="title">About me</h2>
@@ -62,14 +66,14 @@
             <div class="column left">
               <img
                 src="assets/images/photo.png"
-                alt="profile photo"
+                alt="profile"
                 class="js-photo"
               />
             </div>
             <div class="column right">
               <div class="text">
-                I'm <span class="js-name"></span> and I'm a
-                <span class="typing-2"></span>
+                I'm <span class="name-accent js-first-name">Induranga</span> and
+                I'm a <span class="role-accent typing-2"></span>
               </div>
               <p class="js-bio"></p>
               <div class="about-links js-about-links"></div>
@@ -78,7 +82,7 @@
         </div>
       </section>
 
-      <!-- Projects (JSON placeholders first, GitHub replaces) -->
+      <!-- Projects -->
       <section class="Projects" id="Projects">
         <div class="max-width">
           <h2 class="title">Projects</h2>
@@ -86,13 +90,11 @@
         </div>
       </section>
 
-      <!-- Skills (driven by portfolio.json) -->
+      <!-- Skills (from JSON) -->
       <section class="skills" id="skills">
         <div class="max-width">
           <h2 class="title">My skills</h2>
-          <div class="skills-content js-skills">
-            <!-- JS will render categories + items here from portfolio.json -->
-          </div>
+          <div class="skills-content js-skills"></div>
         </div>
       </section>
 
@@ -104,6 +106,7 @@
             <div class="column left">
               <div class="text">Get in Touch</div>
               <p>If you want to contact me, send me a message.</p>
+
               <div class="icons">
                 <div class="row">
                   <i class="fas fa-user"></i>
@@ -125,11 +128,16 @@
                   <i class="fas fa-envelope"></i>
                   <div class="info">
                     <div class="head">Email</div>
-                    <div class="sub-title">induranga.20200688@iit.ac.lk</div>
+                    <div class="sub-title">
+                      <a href="mailto:induranga.20200688@iit.ac.lk"
+                        >induranga.20200688@iit.ac.lk</a
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="column right">
               <div class="text">Message me</div>
               <form
@@ -187,23 +195,21 @@
       </section>
     </div>
 
-    <!-- Thanks popup -->
+    <!-- Popups (optional) -->
     <div class="popup" id="popup">
-      <img src="assets/images/Right.png" alt="Right_Sign" />
+      <img src="assets/images/Right.png" alt="success" />
       <h2>THANK YOU !!</h2>
       <p>
-        Thank You for Contacting Me<br />Your message has been sent
+        Thank you for contacting me.<br />Your message has been sent
         successfully!
       </p>
-      <button type="submit" onclick="Okay()">OK</button>
+      <button type="button" onclick="Okay()">OK</button>
     </div>
-
-    <!-- Error popup -->
     <div class="error" id="error">
-      <img src="assets/images/wrong.png" alt="Error_Sign" />
+      <img src="assets/images/wrong.png" alt="error" />
       <h2>Error While Sending Message</h2>
-      <p>Check Your connection</p>
-      <button type="submit" onclick="error()">OK</button>
+      <p>Check your connection</p>
+      <button type="button" onclick="error()">OK</button>
     </div>
 
     <!-- Footer -->
@@ -216,17 +222,28 @@
         <a
           href="https://www.facebook.com/induranga.kawishwara.7?mibextid=ZbWKwL"
           target="_blank"
-          ><i class="fab fa-facebook"></i></a
-        >&nbsp;&nbsp;
-        <a href="https://github.com/Induranga-kawishwara" target="_blank"
-          ><i class="fab fa-github"></i></a
-        >&nbsp;&nbsp;
-        <a href="https://www.instagram.com/kawishwara_ik/" target="_blank"
-          ><i class="fab fa-instagram"></i></a
-        >&nbsp;&nbsp;
+          rel="noopener"
+          ><i class="fab fa-facebook"></i
+        ></a>
+        &nbsp;&nbsp;
+        <a
+          href="https://github.com/Induranga-kawishwara"
+          target="_blank"
+          rel="noopener"
+          ><i class="fab fa-github"></i
+        ></a>
+        &nbsp;&nbsp;
+        <a
+          href="https://www.instagram.com/kawishwara_ik/"
+          target="_blank"
+          rel="noopener"
+          ><i class="fab fa-instagram"></i
+        ></a>
+        &nbsp;&nbsp;
         <a
           href="https://www.linkedin.com/in/induranga-kawishwara-333a88233/"
           target="_blank"
+          rel="noopener"
           ><i class="fab fa-linkedin"></i
         ></a>
       </div>
