@@ -1,0 +1,18 @@
+{
+  "profile": {
+    "name": "Induranga Kawishwara",
+    "roles": ["Software Engineer"],
+    "cv_url": "https://drive.google.com/file/d/1q6xfaPSl9QKHHdfCMoeH7cwXX7t7dwSk/view?usp=sharing",
+    "photo": "assets/images/photo.png"
+  },
+  "links": {
+    "github": "https://github.com/Induranga-kawishwara",
+    "linkedin": "https://www.linkedin.com/in/induranga-kawishwara-333a88233/",
+    "medium": "https://medium.com/@indurangakawishwara2003",
+    "email": "induranga.20200688@iit.ac.lk"
+  },
+  "skills": {
+    "backend": ["Java", "Python", "PHP", "MySQL", "R"],
+    "frontend": ["HTML5", "CSS3", "JavaScript"]
+  }
+}

@@ -1,3 +1,4 @@
+// assets/js/script.js
 $(document).ready(function () {
   /* ==================== NAV + SCROLL ==================== */
   $(window).on("scroll", function () {
@@ -36,96 +37,26 @@ $(document).ready(function () {
     loop: true,
   });
 
-  /* ==================== GITHUB → PROJECT CARDS ==================== */
-  const GH_USER = "Induranga-kawishwara"; // your GitHub username
-  const MAX_REPOS = 10; // how many cards to render
-  const MAX_VISIBLE_CHIPS = 6; // > this => chips area becomes a scrollbox
+  /* ==================== DATA SOURCES ==================== */
+  const LOCAL_JSON = "assets/data/portfolio.json"; // <-- your JSON file
+  const GH_USER = "Induranga-kawishwara"; // fallback: GitHub username
+  const MAX_REPOS = 10;
+  const MAX_VISIBLE_CHIPS = 6;
 
-  const $carousel = $("#github-carousel").length
-    ? $("#github-carousel")
-    : $(".carousel");
+  const $carousel = $("#github-carousel");
 
+  // Util
   const BASE_HEADERS = {
     Accept:
       "application/vnd.github+json, application/vnd.github.mercy-preview+json",
     "X-GitHub-Api-Version": "2022-11-28",
   };
-
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-  // Token-free fetch with small backoff on 403 (rate/abuse)
-  async function fetchGitHub(url, opts = {}, attempt = 0) {
-    const res = await fetch(url, { headers: BASE_HEADERS, ...opts });
-    if (res.ok) return res;
-
-    if (res.status === 403 && attempt < 2) {
-      const retryAfter =
-        Number(res.headers.get("Retry-After")) || 1000 + attempt * 1500;
-      await sleep(retryAfter);
-      return fetchGitHub(url, opts, attempt + 1);
-    }
-    throw new Error(`GitHub API error: ${res.status}`);
-  }
-
-  // Filter out noisy tool/build "languages"
-  const NOISE_LANGS = new Set([
-    "Makefile",
-    "CMake",
-    "QMake",
-    "Batchfile",
-    "Shell",
-    "PowerShell",
-    "Dockerfile",
-    "Procfile",
-    "GLSL",
-    "ShaderLab",
-  ]);
-
-  // Pretty title from repo name
-  const displayName = (n) => (n || "").replace(/[_-]+/g, " ").trim();
-
-  // Frameworks via topics → readable labels
-  const FW_MAP = {
-    react: "React",
-    reactjs: "React",
-    nextjs: "Next.js",
-    vue: "Vue",
-    angular: "Angular",
-    svelte: "Svelte",
-    node: "Node.js",
-    nodejs: "Node.js",
-    express: "Express",
-    spring: "Spring",
-    "spring-boot": "Spring Boot",
-    django: "Django",
-    flask: "Flask",
-    fastapi: "FastAPI",
-    dotnet: ".NET",
-    aspnet: "ASP.NET",
-    aspnetcore: "ASP.NET Core",
-    bootstrap: "Bootstrap",
-    tailwind: "Tailwind CSS",
-    tailwindcss: "Tailwind CSS",
-    flutter: "Flutter",
-    kivy: "Kivy",
-  };
-  function frameworksFromTopics(topics) {
-    if (!Array.isArray(topics)) return [];
-    const set = new Set();
-    topics.forEach((t) => {
-      const k = String(t || "").toLowerCase();
-      if (FW_MAP[k]) set.add(FW_MAP[k]);
-    });
-    return Array.from(set);
-  }
-
-  // OpenGraph preview banner
-  const repoImage = (owner, name) =>
-    `https://opengraph.githubassets.com/1/${owner}/${name}`;
   const truncate = (txt, n) =>
     !txt ? "" : txt.length > n ? txt.slice(0, n - 1) + "…" : txt;
+  const displayName = (n) => (n || "").replace(/[_-]+/g, " ").trim();
 
-  // --- Beautiful fallback gradient poster (when OG image fails) ---
+  // Gradient fallback for covers
   function hashCode(str) {
     let h = 0;
     for (let i = 0; i < str.length; i++) {
@@ -166,7 +97,7 @@ $(document).ready(function () {
     return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
   }
 
-  // Build chips; if too many, add scrollbox class
+  // Chips builder
   function badges(langs, fws) {
     const total = (langs?.length || 0) + (fws?.length || 0);
     const extra = total > MAX_VISIBLE_CHIPS ? " scrollbox" : "";
@@ -179,7 +110,119 @@ $(document).ready(function () {
     return `<div class="tags${extra}">${langBadges}${fwBadges}</div>`;
   }
 
-  // Card template with full-width banner cover and fallback gradient
+  /* ==================== RENDER: LOCAL JSON PROJECT ==================== */
+  function projectCardFromJSON(p) {
+    const title = p.title || "Untitled";
+    const cover = p.cover || gradientPlaceholder(title);
+    const updated = p.updated ? new Date(p.updated).toLocaleDateString() : "";
+    const stars = p.stars || 0;
+    const live = p.live
+      ? `<a href="${p.live}" target="_blank" rel="noopener" class="live-link">Live Site</a>`
+      : "";
+    const desc = truncate(p.description || "", 120);
+
+    return `
+      <div class="card">
+        <a href="${
+          p.repo || "#"
+        }" style="color: rgb(248, 246, 246)" target="_blank" rel="noopener">
+          <div class="box">
+            <div class="thumb">
+              <img src="${cover}" alt="${title}" loading="lazy"
+                   onerror="this.onerror=null;this.src='${gradientPlaceholder(
+                     title
+                   )}';" />
+            </div>
+            <div class="text">${title}</div>
+            <div class="repo-meta">★ ${stars} ${updated ? `• Updated ${updated}` : ""}</div>
+            ${live}
+            <div class="repo-desc">${desc}</div>
+            ${badges(p.languages || [], p.frameworks || [])}
+          </div>
+        </a>
+      </div>
+    `;
+  }
+
+  async function loadLocalProjects() {
+    const res = await fetch(LOCAL_JSON, { cache: "no-store" });
+    if (!res.ok) throw new Error("No local JSON");
+    const data = await res.json();
+    const projects = Array.isArray(data.projects) ? data.projects : [];
+    if (!projects.length) throw new Error("Empty projects");
+    $carousel.empty();
+    projects.forEach((p) => $carousel.append(projectCardFromJSON(p)));
+    return true;
+  }
+
+  /* ==================== FALLBACK: GITHUB PROJECTS ==================== */
+  const NOISE_LANGS = new Set([
+    "Makefile",
+    "CMake",
+    "QMake",
+    "Batchfile",
+    "Shell",
+    "PowerShell",
+    "Dockerfile",
+    "Procfile",
+    "GLSL",
+    "ShaderLab",
+  ]);
+  const FW_MAP = {
+    react: "React",
+    reactjs: "React",
+    nextjs: "Next.js",
+    vue: "Vue",
+    angular: "Angular",
+    svelte: "Svelte",
+    node: "Node.js",
+    nodejs: "Node.js",
+    express: "Express",
+    spring: "Spring",
+    "spring-boot": "Spring Boot",
+    django: "Django",
+    flask: "Flask",
+    fastapi: "FastAPI",
+    dotnet: ".NET",
+    aspnet: "ASP.NET",
+    aspnetcore: "ASP.NET Core",
+    bootstrap: "Bootstrap",
+    tailwind: "Tailwind CSS",
+    tailwindcss: "Tailwind CSS",
+    flutter: "Flutter",
+    kivy: "Kivy",
+  };
+  const repoImage = (owner, name) =>
+    `https://opengraph.githubassets.com/1/${owner}/${name}`;
+
+  async function fetchGitHub(url, attempt = 0) {
+    const res = await fetch(url, { headers: BASE_HEADERS });
+    if (res.ok) return res;
+    if (res.status === 403 && attempt < 2) {
+      const retryAfter =
+        Number(res.headers.get("Retry-After")) || 1000 + attempt * 1500;
+      await sleep(retryAfter);
+      return fetchGitHub(url, attempt + 1);
+    }
+    throw new Error(`GitHub API error: ${res.status}`);
+  }
+
+  function isMetaRepo(r) {
+    const name = (r.name || "").toLowerCase();
+    const user = GH_USER.toLowerCase();
+    return name === user || name === ".github" || name === `${user}.github.io`;
+  }
+
+  function frameworksFromTopics(topics) {
+    if (!Array.isArray(topics)) return [];
+    const set = new Set();
+    topics.forEach((t) => {
+      const k = String(t || "").toLowerCase();
+      if (FW_MAP[k]) set.add(FW_MAP[k]);
+    });
+    return Array.from(set);
+  }
+
   function repoCard(repo) {
     const title = displayName(repo.name);
     const cover = repoImage(repo.owner.login, repo.name);
@@ -194,14 +237,12 @@ $(document).ready(function () {
 
     const rawDesc = repo.description || "";
     const desc = truncate(rawDesc.replace(/\blive\s*site\b/gi, "").trim(), 120);
-
-    const hasHomepage =
+    const live =
       repo.homepage &&
       repo.homepage.trim() &&
-      !/^https?:\/\/github\.com/i.test(repo.homepage);
-    const live = hasHomepage
-      ? `<a href="${repo.homepage}" target="_blank" rel="noopener" class="live-link">Live Site</a>`
-      : "";
+      !/^https?:\/\/github\.com/i.test(repo.homepage)
+        ? `<a href="${repo.homepage}" target="_blank" rel="noopener" class="live-link">Live Site</a>`
+        : "";
 
     return `
       <div class="card">
@@ -210,13 +251,12 @@ $(document).ready(function () {
         }" style="color: rgb(248, 246, 246)" target="_blank" rel="noopener">
           <div class="box">
             <div class="thumb">
-              <img src="${cover}" alt="${title}" loading="lazy"
-                   onerror="this.onerror=null;this.src='${fallback}';" />
+              <img src="${cover}" alt="${title}" loading="lazy" onerror="this.onerror=null;this.src='${fallback}';" />
             </div>
             <div class="text">${title}</div>
             <div class="repo-meta">★ ${stars} • Updated ${updated}</div>
             ${live}
-            <div class="repo-desc">${desc || ""}</div>
+            <div class="repo-desc">${desc}</div>
             ${badges(langs, fws)}
           </div>
         </a>
@@ -224,20 +264,6 @@ $(document).ready(function () {
     `;
   }
 
-  // Exclude meta/profile repos from Projects
-  function isMetaRepo(r) {
-    const name = (r.name || "").toLowerCase();
-    const user = GH_USER.toLowerCase();
-    if (name === user) return true; // profile README repo
-    if (name === ".github") return true; // meta
-    if (name === `${user}.github.io`) return true; // GitHub Pages
-    return false;
-  }
-  const EXCLUDE_BY_NAME = new Set([
-    // "repo-to-hide"
-  ]);
-
-  // Search API: repos (topics included with Accept header)
   async function fetchReposWithTopics() {
     const url = `https://api.github.com/search/repositories?q=user:${encodeURIComponent(
       GH_USER
@@ -247,7 +273,6 @@ $(document).ready(function () {
     return Array.isArray(data.items) ? data.items : [];
   }
 
-  // Languages: sequential (polite) and skip noisy ones
   async function addLanguages(repos) {
     for (let i = 0; i < repos.length; i++) {
       const r = repos[i];
@@ -256,57 +281,36 @@ $(document).ready(function () {
         const langMap = await res.json(); // { Lang: bytes }
         const entries = Object.entries(langMap)
           .sort((a, b) => b[1] - a[1])
-          .filter(([lang]) => !NOISE_LANGS.has(lang));
-
+          .filter(([l]) => !NOISE_LANGS.has(l));
         r._languages = entries.length
-          ? entries.map(([lang]) => lang)
+          ? entries.map(([l]) => l)
           : r.language
           ? [r.language]
           : [];
       } catch {
         r._languages = r.language ? [r.language] : [];
       }
-      await sleep(150); // spread requests to avoid 403
+      await sleep(150);
     }
     return repos;
   }
 
   async function loadGitHubProjects() {
-    try {
-      // 1) repos with topics
-      let repos = await fetchReposWithTopics();
-
-      // 2) filter/sort/select
-      repos = repos
-        .filter((r) => {
-          const n = (r.name || "").toLowerCase();
-          return (
-            !r.fork &&
-            !r.archived &&
-            !r.is_template &&
-            !isMetaRepo(r) &&
-            !EXCLUDE_BY_NAME.has(n)
-          );
-        })
-        .sort(
-          (a, b) =>
-            b.stargazers_count - a.stargazers_count ||
-            new Date(b.updated_at) - new Date(a.updated_at)
-        )
-        .slice(0, MAX_REPOS);
-
-      // 3) languages
-      await addLanguages(repos);
-
-      // 4) render
-      $carousel.empty();
-      repos.forEach((r) => $carousel.append(repoCard(r)));
-    } catch (e) {
-      console.warn(e);
-      // fallback: keep any static cards you may have
-    }
+    let repos = await fetchReposWithTopics();
+    repos = repos
+      .filter((r) => !r.fork && !r.archived && !r.is_template && !isMetaRepo(r))
+      .sort(
+        (a, b) =>
+          b.stargazers_count - a.stargazers_count ||
+          new Date(b.updated_at) - new Date(a.updated_at)
+      )
+      .slice(0, MAX_REPOS);
+    await addLanguages(repos);
+    $carousel.empty();
+    repos.forEach((r) => $carousel.append(repoCard(r)));
   }
 
+  /* ==================== CAROUSEL INIT ==================== */
   function initOwl() {
     $carousel.owlCarousel({
       margin: 20,
@@ -322,7 +326,7 @@ $(document).ready(function () {
     });
   }
 
-  // Allow wheel scrolling inside the chips scrollbox
+  // Enable wheel scroll inside chip scrollboxes
   $(document).on("wheel", ".tags", function (e) {
     const el = this,
       evt = e.originalEvent;
@@ -335,8 +339,13 @@ $(document).ready(function () {
     }
   });
 
+  /* ==================== BOOTSTRAP ==================== */
   (async function initProjects() {
-    await loadGitHubProjects();
+    try {
+      await loadLocalProjects(); // use your JSON
+    } catch (e) {
+      await loadGitHubProjects(); // fallback to GitHub if JSON missing/empty
+    }
     initOwl();
   })();
 });
