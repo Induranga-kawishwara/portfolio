@@ -41,23 +41,20 @@
         </div>
       </nav>
 
-      <!-- Home -->
+      <!-- Home (name/roles/CV filled from JSON) -->
       <section class="home" id="particles-js">
         <div class="max-width">
           <div class="home-content">
             <div class="text-1">Hello, my name is</div>
-            <div class="text-2">Induranga Kawishwara</div>
+            <div class="text-2"></div>
+            <!-- profile.name -->
             <div class="text-3">And I'm a <span class="typing"></span></div>
-            <a
-              href="https://drive.google.com/file/d/1q6xfaPSl9QKHHdfCMoeH7cwXX7t7dwSk/view?usp=sharing"
-              target="_blank"
-              >Download CV</a
-            >
+            <a class="js-cv-link" href="#" target="_blank">Download CV</a>
           </div>
         </div>
       </section>
 
-      <!-- About (driven entirely by portfolio.json) -->
+      <!-- About (driven by portfolio.json) -->
       <section class="about" id="about">
         <div class="max-width">
           <h2 class="title">About me</h2>
@@ -65,13 +62,13 @@
             <div class="column left">
               <img
                 src="assets/images/photo.png"
-                alt="my picture"
+                alt="profile photo"
                 class="js-photo"
               />
             </div>
             <div class="column right">
               <div class="text">
-                I'm <span class="js-name">Induranga</span> and I'm a
+                I'm <span class="js-name"></span> and I'm a
                 <span class="typing-2"></span>
               </div>
               <p class="js-bio"></p>
@@ -81,7 +78,7 @@
         </div>
       </section>
 
-      <!-- Projects -->
+      <!-- Projects (JSON placeholders first, GitHub replaces) -->
       <section class="Projects" id="Projects">
         <div class="max-width">
           <h2 class="title">Projects</h2>
@@ -89,55 +86,12 @@
         </div>
       </section>
 
-      <!-- Skills (static) -->
+      <!-- Skills (driven by portfolio.json) -->
       <section class="skills" id="skills">
         <div class="max-width">
           <h2 class="title">My skills</h2>
-          <div class="skills-content">
-            <div class="columns">
-              <!-- Backend -->
-              <div class="column backend">
-                <div class="skill-header">
-                  <i class="fas fa-server"></i>
-                  <h3>Backend</h3>
-                </div>
-                <div class="skill-items">
-                  <div class="skill-item">
-                    <i class="fab fa-java"></i><span>Java</span>
-                  </div>
-                  <div class="skill-item">
-                    <i class="fab fa-python"></i><span>Python</span>
-                  </div>
-                  <div class="skill-item">
-                    <i class="fab fa-php"></i><span>PHP</span>
-                  </div>
-                  <div class="skill-item">
-                    <i class="fas fa-database"></i><span>MySQL</span>
-                  </div>
-                  <div class="skill-item">
-                    <i class="fas fa-chart-line"></i><span>R</span>
-                  </div>
-                </div>
-              </div>
-              <!-- Frontend -->
-              <div class="column frontend">
-                <div class="skill-header">
-                  <i class="fas fa-desktop"></i>
-                  <h3>Frontend</h3>
-                </div>
-                <div class="skill-items">
-                  <div class="skill-item">
-                    <i class="fab fa-html5"></i><span>HTML5</span>
-                  </div>
-                  <div class="skill-item">
-                    <i class="fab fa-css3-alt"></i><span>CSS3</span>
-                  </div>
-                  <div class="skill-item">
-                    <i class="fab fa-js-square"></i><span>JavaScript</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="skills-content js-skills">
+            <!-- JS will render categories + items here from portfolio.json -->
           </div>
         </div>
       </section>

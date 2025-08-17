@@ -164,7 +164,6 @@ $(document).ready(function () {
   }
   function mountCards(htmlArray) {
     if (owlInitialized) {
-      // destroy + unwrap owl structure
       $carousel.trigger("destroy.owl.carousel");
       $carousel.removeClass("owl-loaded");
       $carousel.find(".owl-stage-outer").children().unwrap();
@@ -175,17 +174,104 @@ $(document).ready(function () {
     initOwl();
   }
 
+  /* ----------- ICONS for skills ----------- */
+  const ICONS = {
+    java: "fab fa-java",
+    python: "fab fa-python",
+    php: "fab fa-php",
+    mysql: "fas fa-database",
+    sqlite: "fas fa-database",
+    mongodb: "fas fa-database",
+    r: "fas fa-chart-line",
+    html: "fab fa-html5",
+    html5: "fab fa-html5",
+    css: "fab fa-css3-alt",
+    css3: "fab fa-css3-alt",
+    javascript: "fab fa-js-square",
+    js: "fab fa-js-square",
+    typescript: "fab fa-js",
+    react: "fab fa-react",
+    bootstrap: "fab fa-bootstrap",
+    "tailwind css": "fas fa-wind",
+    tailwind: "fas fa-wind",
+    "node.js": "fab fa-node",
+    node: "fab fa-node",
+    express: "fas fa-route",
+    "spring boot": "fas fa-leaf",
+    spring: "fas fa-seedling",
+    django: "fas fa-leaf",
+    flask: "fas fa-flask",
+    git: "fab fa-git-alt",
+    github: "fab fa-github",
+    docker: "fab fa-docker",
+    figma: "fab fa-figma",
+    swift: "fab fa-swift",
+    kotlin: "fas fa-mobile-alt",
+    "next.js": "fas fa-code-branch",
+    fastapi: "fas fa-bolt",
+  };
+  const pickIcon = (name) => {
+    const k = String(name || "")
+      .toLowerCase()
+      .trim();
+    return ICONS[k] || (k.includes("db") ? "fas fa-database" : "fas fa-code");
+  };
+
+  /* ----------- Skills from JSON ----------- */
+  function renderSkills(skillsObj) {
+    if (!skillsObj || typeof skillsObj !== "object") return;
+    const $root = $(".js-skills").empty();
+
+    // Keep insertion order of keys as in JSON
+    const entries = Object.entries(skillsObj);
+
+    const $columns = $('<div class="columns"></div>');
+    entries.forEach(([category, items]) => {
+      const title = category.charAt(0).toUpperCase() + category.slice(1);
+      const $col = $('<div class="column"></div>');
+      const $header = $(`
+        <div class="skill-header">
+          <i class="fas fa-check-circle"></i>
+          <h3>${title}</h3>
+        </div>
+      `);
+      const $items = $('<div class="skill-items"></div>');
+      (items || []).forEach((name) => {
+        const icon = pickIcon(name);
+        $items.append(`
+          <div class="skill-item">
+            <i class="${icon}"></i>
+            <span>${name}</span>
+          </div>
+        `);
+      });
+      $col.append($header).append($items);
+      $columns.append($col);
+    });
+
+    $root.append($columns);
+  }
+
   /* ----------- About from JSON ----------- */
   function applyProfileAndAbout(data) {
     if (!data) return;
+
+    // Home + About
     if (data.profile?.name) {
       $(".home .text-2").text(data.profile.name);
       $(".js-name").text(data.profile.name.split(" ")[0] || data.profile.name);
     }
     startTyping(data.profile?.roles);
     if (data.profile?.photo) $(".js-photo").attr("src", data.profile.photo);
-    if (data.profile?.cv_url)
-      $(".home a[href*='drive.google']").attr("href", data.profile.cv_url);
+
+    // Prefer .js-cv-link if present, fallback to existing anchor
+    if (data.profile?.cv_url) {
+      const $cv = $(".js-cv-link").length
+        ? $(".js-cv-link")
+        : $(".home a[href*='drive.google']");
+      $cv.attr("href", data.profile.cv_url);
+    }
+
     if (data.about?.bio) $(".js-bio").text(data.about.bio);
 
     const $links = $(".js-about-links").empty();
@@ -195,6 +281,9 @@ $(document).ready(function () {
       $links.append(mk(data.links.linkedin, "LinkedIn"));
     if (data.links?.medium) $links.append(mk(data.links.medium, "Medium"));
     if (data.links?.github) $links.append(mk(data.links.github, "GitHub"));
+
+    // Skills
+    if (data.skills) renderSkills(data.skills);
   }
 
   /* ----------- JSON project card ----------- */
@@ -376,18 +465,14 @@ $(document).ready(function () {
   /* ----------- Boot ----------- */
   (async function init() {
     try {
-      // Render local JSON immediately (placeholders) — also fills About
-      await renderFromLocalJSON();
+      await renderFromLocalJSON(); // About + Skills + JSON projects
     } catch {
-      // If JSON missing, still start typing defaults
-      startTyping();
+      startTyping(); // still run typing with defaults
     }
 
-    // Start GitHub in background and replace when ready
     try {
-      await refreshFromGitHub();
+      await refreshFromGitHub(); // replace cards with live GitHub data
     } catch (e) {
-      // If GitHub fails, keep JSON projects
       console.warn("GitHub load failed; keeping JSON projects.", e);
     }
   })();

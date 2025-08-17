@@ -276,32 +276,166 @@ section .title::after {
   background: none;
 }
 
-/* skills */
+/* =================== SKILLS — Responsive =================== */
 .skills .title::after {
   content: "What I Know";
 }
+.skills .skills-content {
+  width: 100%;
+}
+
+/* Category columns (Backend, Frontend, etc.) */
+.skills .skills-content .columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  width: 100%;
+}
+
+/* Category card */
 .skills .skills-content .column {
-  width: calc(100% - 30px);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #ffffff, #f8f8f8);
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  min-width: 0; /* important for grid overflow on small screens */
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
-.skills .skills-content .left .text {
+.skills .skills-content .column:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+}
+
+/* Category header */
+.skills .skill-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+.skills .skill-header i {
+  font-size: 36px;
+  color: crimson;
+}
+.skills .skill-header h3 {
+  font-size: 22px;
+  margin: 0;
+  color: #2d3436;
+}
+
+/* Skill items grid inside each category */
+.skills .skill-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+/* Each skill chip */
+.skills .skill-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 0; /* let text truncate nicely */
+}
+.skills .skill-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+.skills .skill-item i {
   font-size: 20px;
+  flex: 0 0 auto;
+}
+.skills .skill-item span {
+  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 10px;
+  color: #2d3436;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.skills .skills-content .left p {
-  text-align: justify;
+
+/* gradient icon styles (kept from your original) */
+.fa-java {
+  background: linear-gradient(45deg, #007396, #00b4d8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-.skills .skills-content .left a {
-  display: inline-block;
-  background: crimson;
-  color: #fff;
-  font-size: 18px;
-  font-weight: 500;
-  padding: 8px 16px;
-  margin-top: 20px;
-  border-radius: 6px;
-  border: 2px solid crimson;
-  transition: 0.3s;
+.fa-python {
+  background: linear-gradient(45deg, #3776ab, #4b8bbe);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.fa-php {
+  background: linear-gradient(45deg, #777bb4, #8892bf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.fa-database {
+  background: linear-gradient(45deg, #4479a1, #5d8aa8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.fa-chart-line {
+  background: linear-gradient(45deg, #276dc3, #1a73e8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.fa-html5 {
+  background: linear-gradient(45deg, #e34f26, #f06529);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.fa-css3-alt {
+  background: linear-gradient(45deg, #1572b6, #2965f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.fa-js-square {
+  background: linear-gradient(45deg, #f7df1e, #d4bb00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --------- Small screens tweaks for Skills --------- */
+@media (max-width: 900px) {
+  .skills .skills-content .columns {
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .skills .skills-content .columns {
+    grid-template-columns: 1fr;
+  }
+  .skills .skill-items {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .skills .skill-header i {
+    font-size: 32px;
+  }
+  .skills .skill-header h3 {
+    font-size: 20px;
+  }
 }
 
 /* Projects */
@@ -722,161 +856,6 @@ footer span a:hover {
   font-size: 30px;
 }
 
-/* Skills grid/cards */
-.skills-content .columns {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  width: 100%;
-}
-.skills-content .column {
-  flex: 1;
-  background: linear-gradient(145deg, #fff, #f8f8f8);
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s, box-shadow 0.3s;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-.skills-content .column:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-}
-.skill-header {
-  text-align: center;
-  margin-bottom: 40px;
-  position: relative;
-}
-.skill-header i {
-  font-size: 48px;
-  color: crimson;
-  margin-bottom: 20px;
-  display: inline-block;
-  background: linear-gradient(45deg, crimson, #ff6b6b);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.skill-header h3 {
-  font-size: 28px;
-  margin: 0;
-  color: #2d3436;
-  position: relative;
-  display: inline-block;
-  padding-bottom: 10px;
-}
-.skill-header h3::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: crimson;
-  border-radius: 2px;
-}
-.skill-items {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 25px;
-}
-.skill-item {
-  text-align: center;
-  padding: 25px;
-  background: #fff;
-  border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
-  overflow: hidden;
-}
-.skill-item::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(220, 20, 60, 0.08));
-  transform: rotate(45deg);
-  transition: 0.4s;
-  opacity: 0;
-}
-.skill-item:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-.skill-item:hover::before {
-  opacity: 1;
-  top: -20%;
-  left: -20%;
-}
-.skill-item i {
-  font-size: 42px;
-  margin-bottom: 15px;
-  display: block;
-  transition: transform 0.3s;
-}
-.skill-item:hover i {
-  transform: scale(1.1);
-}
-.skill-item span {
-  font-size: 17px;
-  font-weight: 600;
-  color: #2d3436;
-  position: relative;
-  z-index: 1;
-}
-
-.fa-java {
-  background: linear-gradient(45deg, #007396, #00b4d8);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.fa-python {
-  background: linear-gradient(45deg, #3776ab, #4b8bbe);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.fa-php {
-  background: linear-gradient(45deg, #777bb4, #8892bf);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.fa-database {
-  background: linear-gradient(45deg, #4479a1, #5d8aa8);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.fa-chart-line {
-  background: linear-gradient(45deg, #276dc3, #1a73e8);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.fa-html5 {
-  background: linear-gradient(45deg, #e34f26, #f06529);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.fa-css3-alt {
-  background: linear-gradient(45deg, #1572b6, #2965f1);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.fa-js-square {
-  background: linear-gradient(45deg, #f7df1e, #d4bb00);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 /* responsive */
 @media (max-width: 1104px) {
   .about .about-content .left img {
@@ -943,7 +922,7 @@ footer span a:hover {
   .about .about-content .right {
     flex: 100%;
   }
-  .skills .skills-content .column,
+  /* removed old skills width override to avoid breaking grid */
   .contact .contact-content .column {
     width: 100%;
     margin-bottom: 35px;
@@ -989,8 +968,7 @@ footer span a:hover {
   .home .home-content .text-3 {
     font-size: 27px;
   }
-  .about .about-content .right .text,
-  .skills .skills-content .left .text {
+  .about .about-content .right .text {
     font-size: 19px;
   }
   .contact .right form .fields {
