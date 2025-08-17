@@ -1,4 +1,3 @@
-/*  import google fonts */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap");
 
 * {
@@ -10,7 +9,11 @@
 html {
   scroll-behavior: smooth;
 }
-
+body {
+  background: #000;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+}
 .main {
   visibility: visible;
 }
@@ -20,7 +23,7 @@ html {
   user-select: none;
 }
 
-/* custom scroll bar */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -34,7 +37,7 @@ html {
   background: #555;
 }
 
-/* layout */
+/* Sections */
 section {
   padding: 100px 0;
 }
@@ -44,38 +47,14 @@ section {
   margin: auto;
 }
 
-.about,
-.skills,
-.Projects,
-.contact,
-footer {
-  font-family: "Poppins", sans-serif;
-}
-.contact,
-.Projects {
-  color: #fff;
-  background: #111;
-}
-.contact .title::before,
-.Projects .title::before {
-  background: #fff;
-}
-
-.about .about-content,
-.skills .skills-content,
-.contact .contact-content {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-}
+/* Section titles */
 section .title {
   position: relative;
   text-align: center;
   font-size: 40px;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 60px;
-  padding-bottom: 20px;
+  padding-bottom: 18px;
   font-family: "Ubuntu", sans-serif;
 }
 section .title::before {
@@ -92,21 +71,44 @@ section .title::after {
   position: absolute;
   bottom: -8px;
   left: 50%;
-  font-size: 20px;
-  color: crimson;
-  padding: 0 5px;
-  background: #fff;
   transform: translateX(-50%);
+  font-size: 18px;
+  color: crimson;
+  padding: 0 6px;
+  background: #fff;
 }
 
-/* navbar */
+/* Dark sections */
+.Projects,
+.contact {
+  background: #111;
+  color: #fff;
+}
+.Projects .title::before,
+.contact .title::before {
+  background: #fff;
+}
+
+/* Shared containers */
+.about .about-content,
+.skills .skills-content,
+.contact .contact-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* =========================================================
+   Navbar
+========================================================= */
 .navbar {
   position: fixed;
   width: 100%;
   z-index: 999;
   padding: 30px 0;
-  font-family: "Ubuntu", sans-serif;
   transition: 0.3s;
+  font-family: "Ubuntu", sans-serif;
 }
 .navbar.sticky {
   padding: 15px 0;
@@ -120,7 +122,7 @@ section .title::after {
 .navbar .logo a {
   color: #fff;
   font-size: 35px;
-  font-weight: 600;
+  font-weight: 700;
 }
 .navbar .logo a span {
   color: crimson;
@@ -129,6 +131,7 @@ section .title::after {
 .navbar.sticky .logo a span {
   color: #fff;
 }
+
 .navbar .menu li {
   list-style: none;
   display: inline-block;
@@ -139,7 +142,7 @@ section .title::after {
   font-size: 18px;
   font-weight: 500;
   margin-left: 25px;
-  transition: 0.3s;
+  transition: color 0.3s ease;
 }
 .navbar .menu li a:hover {
   color: crimson;
@@ -148,28 +151,28 @@ section .title::after {
   color: #fff;
 }
 
-/* menu btn */
+/* Burger */
 .menu-btn {
   color: #fff;
   font-size: 23px;
   cursor: pointer;
   display: none;
 }
+
+/* Scroll up btn */
 .scroll-up-btn {
   position: fixed;
   height: 45px;
   width: 42px;
-  background: crimson;
   right: 30px;
   bottom: 10px;
+  background: crimson;
+  color: #fff;
   text-align: center;
   line-height: 45px;
-  color: #fff;
-  z-index: 9999;
-  font-size: 30px;
   border-radius: 6px;
-  border-bottom-width: 2px;
-  cursor: pointer;
+  font-size: 30px;
+  z-index: 9999;
   opacity: 0;
   pointer-events: none;
   transition: 0.3s;
@@ -183,11 +186,13 @@ section .title::after {
   filter: brightness(90%);
 }
 
-/* home */
+/* =========================================================
+   Home (particles background)
+========================================================= */
 #particles-js {
   height: 105vh;
-  background: #000;
   min-height: 500px;
+  background: #000;
   background-size: cover;
   background-attachment: fixed;
   background-position: 50% 50%;
@@ -205,7 +210,7 @@ section .title::after {
 }
 .home .home-content .text-2 {
   font-size: 75px;
-  font-weight: 600;
+  font-weight: 700;
 }
 .home .home-content .text-3 {
   font-size: 40px;
@@ -213,159 +218,210 @@ section .title::after {
 }
 .home .home-content .text-3 span {
   color: crimson;
-  font-weight: 500;
+  font-weight: 600;
 }
 .home .home-content a {
   display: inline-block;
   background: crimson;
   color: #fff;
-  font-size: 25px;
-  padding: 12px 36px;
+  font-size: 22px;
+  padding: 12px 28px;
   margin-top: 20px;
-  font-weight: 400;
-  border-radius: 6px;
+  font-weight: 500;
+  border-radius: 10px;
   border: 2px solid crimson;
-  transition: 0.3s;
+  transition: 0.25s;
 }
 .home .home-content a:hover {
   color: crimson;
   background: none;
 }
 
-/* about */
+/* =========================================================
+   About
+========================================================= */
 .about .title::after {
   content: "Who I Am";
+  background: #fff;
+}
+.about .about-content {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 40px;
+  align-items: center;
 }
 .about .about-content .left {
-  width: 45%;
+  display: flex;
+  justify-content: center;
 }
 .about .about-content .left img {
-  height: 400px;
-  width: 400px;
+  width: 320px;
+  height: 320px;
   border-radius: 50%;
   object-fit: cover;
-}
-.about .about-content .right {
-  width: 55%;
+  border: 8px solid rgba(220, 20, 60, 0.25);
+  background: #fff;
 }
 .about .about-content .right .text {
-  font-size: 25px;
+  font-size: 26px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  line-height: 1.4;
 }
-.about .about-content .right .text span {
+.about .about-content .right .text .js-name {
+  color: #ff3c60;
+}
+.about .about-content .right .text .typing-2 {
   color: crimson;
 }
 .about .about-content .right p {
-  text-align: justify;
+  color: #333;
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  line-height: 1.6;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
-.about .about-content .right a {
-  display: inline-block;
-  background: crimson;
-  color: #fff;
-  font-size: 20px;
-  font-weight: 500;
-  padding: 10px 30px;
-  margin-top: 20px;
-  border-radius: 6px;
-  border: 2px solid crimson;
-  transition: 0.3s;
-}
-.about .about-content .right a:hover {
-  color: crimson;
-  background: none;
-}
-
-/* =================== SKILLS — Responsive =================== */
-.skills .title::after {
-  content: "What I Know";
-}
-.skills .skills-content {
-  width: 100%;
-}
-
-/* Category columns (Backend, Frontend, etc.) */
-.skills .skills-content .columns {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 32px;
-  width: 100%;
-}
-
-/* Category card */
-.skills .skills-content .column {
+.about .about-content .right .about-links {
+  margin-top: 18px;
   display: flex;
-  flex-direction: column;
-  background: linear-gradient(145deg, #ffffff, #f8f8f8);
-  padding: 28px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  min-width: 0; /* important for grid overflow on small screens */
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  flex-wrap: wrap;
+  gap: 12px;
 }
-.skills .skills-content .column:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
-}
-
-/* Category header */
-.skills .skill-header {
-  display: flex;
+.about-link {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 18px;
-  text-align: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-weight: 600;
+  border: 1px solid #eee;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease,
+    color 0.2s ease;
 }
-.skills .skill-header i {
-  font-size: 36px;
-  color: crimson;
-}
-.skills .skill-header h3 {
-  font-size: 22px;
-  margin: 0;
-  color: #2d3436;
+.about-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  background: crimson;
+  color: #fff;
 }
 
-/* Skill items grid inside each category */
-.skills .skill-items {
+/* =========================================================
+   Skills
+========================================================= */
+.skills .title::after {
+  content: "What I Know";
+  background: #fff;
+}
+
+.skills-content .columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 40px;
   width: 100%;
 }
+.skills-content .column {
+  background: linear-gradient(145deg, #ffffff, #f8f8f8);
+  padding: 34px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+.skills-content .column:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
 
-/* Each skill chip */
-.skills .skill-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.skill-header {
+  text-align: center;
+  margin-bottom: 28px;
+  position: relative;
+}
+.skill-header i {
+  font-size: 44px;
+  color: crimson;
+  margin-bottom: 10px;
+  display: inline-block;
+  background: linear-gradient(45deg, crimson, #ff6b6b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.skill-header h3 {
+  font-size: 24px;
+  color: #2d3436;
+  display: inline-block;
+  padding-bottom: 8px;
+  position: relative;
+}
+.skill-header h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: crimson;
+  border-radius: 2px;
+}
+
+/* Grid of skill items */
+.skill-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 18px;
+}
+.skill-item {
+  text-align: center;
+  padding: 18px;
   background: #fff;
   border-radius: 12px;
-  padding: 10px 12px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-width: 0; /* let text truncate nicely */
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
-.skills .skill-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+.skill-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
 }
-.skills .skill-item i {
-  font-size: 20px;
-  flex: 0 0 auto;
+.skill-item::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(220, 20, 60, 0.08));
+  transform: rotate(45deg);
+  transition: 0.35s;
+  opacity: 0;
 }
-.skills .skill-item span {
-  font-size: 14px;
+.skill-item:hover::before {
+  opacity: 1;
+  top: -20%;
+  left: -20%;
+}
+.skill-item i {
+  font-size: 36px;
+  margin-bottom: 10px;
+  display: block;
+  transition: transform 0.2s;
+}
+.skill-item:hover i {
+  transform: scale(1.08);
+}
+.skill-item span {
+  font-size: 16px;
   font-weight: 600;
   color: #2d3436;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-/* gradient icon styles (kept from your original) */
+/* Colored icon gradients */
 .fa-java {
   background: linear-gradient(45deg, #007396, #00b4d8);
   -webkit-background-clip: text;
@@ -415,34 +471,15 @@ section .title::after {
   -webkit-text-fill-color: transparent;
 }
 
-/* --------- Small screens tweaks for Skills --------- */
-@media (max-width: 900px) {
-  .skills .skills-content .columns {
-    gap: 24px;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-}
-@media (max-width: 600px) {
-  .skills .skills-content .columns {
-    grid-template-columns: 1fr;
-  }
-  .skills .skill-items {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
-  }
-  .skills .skill-header i {
-    font-size: 32px;
-  }
-  .skills .skill-header h3 {
-    font-size: 20px;
-  }
+/* =========================================================
+   Projects (Owl Carousel)
+========================================================= */
+.Projects .title::after {
+  content: "What I Did";
+  background: #111;
 }
 
-/* Projects */
-.Projects .title::after {
-  background: #111;
-  content: "What I Did";
-}
+/* make owl items equal height */
 .Projects .carousel .owl-stage {
   display: flex;
 }
@@ -456,14 +493,15 @@ section .title::after {
 
 .Projects .carousel .card {
   background: #222;
-  border-radius: 6px;
-  padding: 25px 24px 28px;
+  border-radius: 16px;
+  padding: 24px;
   text-align: center;
   overflow: hidden;
   transition: 0.3s;
   display: flex;
   width: 100%;
   height: var(--card-height);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 .Projects .carousel .card:hover {
   background: crimson;
@@ -476,10 +514,11 @@ section .title::after {
   gap: 8px;
   width: 100%;
 }
+
 .Projects .carousel .card .text {
-  font-size: 25px;
-  font-weight: 500;
-  margin: 10px 0 7px;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 8px 0 6px;
   min-height: 48px;
   display: flex;
   align-items: center;
@@ -541,7 +580,7 @@ section .title::after {
   transform: scale(1.02);
   transition: transform 0.35s ease;
 }
-/* hide old circular img rule if any */
+/* hide legacy circular img rule if any */
 .Projects .carousel .card > a .box > img {
   display: none !important;
 }
@@ -583,6 +622,8 @@ section .title::after {
 .tag-fw {
   border-color: rgba(220, 20, 60, 0.6);
 }
+
+/* Scrollbar for tag box */
 .tags.scrollbox::-webkit-scrollbar {
   width: 6px;
 }
@@ -618,108 +659,147 @@ section .title::after {
   background: crimson !important;
 }
 
-/* contact */
-.contact {
-  background: #111;
-}
+/* =========================================================
+   Contact
+========================================================= */
 .contact .title::after {
   background: #111;
   content: "Get In Touch";
 }
-.contact .contact-content .column {
-  width: calc(50% - 30px);
-}
-.contact .contact-content .text {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-.contact .contact-content .left p {
-  color: #fff;
-  text-align: justify;
-}
-.contact .contact-content .left .icons {
-  margin: 10px 0;
-}
-.contact .contact-content .row {
-  display: flex;
-  height: 65px;
-  align-items: center;
-}
-.contact .contact-content .row .info {
-  margin-left: 30px;
-}
-.contact .contact-content .row i {
-  font-size: 25px;
-  color: crimson;
-}
-.contact .contact-content .info .head {
-  font-weight: 500;
-}
-.contact .contact-content .info .sub-title {
-  color: #fff;
-}
-.contact .right form .fields {
-  display: flex;
-}
-.contact .right form .field,
-.contact .right form .fields .field {
-  height: 45px;
-  width: 100%;
-  margin-bottom: 15px;
-}
-.contact .right form .textarea {
-  height: 80px;
-  width: 100%;
-}
-.contact .right form .name {
-  margin-right: 10px;
-}
-.contact .right form .field input,
-.contact .right form .textarea textarea {
-  height: 100%;
-  width: 100%;
-  border: 1px solid lightgrey;
-  border-radius: 6px;
-  outline: none;
-  padding: 0 15px;
-  font-size: 17px;
-  font-family: "Poppins", sans-serif;
-  transition: 0.3s;
-}
-.contact .right form .field input:focus,
-.contact .right form .textarea textarea:focus {
-  border-color: #b3b3b3;
-}
-.contact .right form .textarea textarea {
-  padding-top: 10px;
-  resize: none;
-}
-.contact .right form .button-area {
-  display: flex;
-  align-items: center;
-}
-.right form .button-area button {
-  color: #fff;
-  display: block;
-  width: 160px !important;
-  height: 45px;
-  outline: none;
-  font-size: 18px;
-  font-weight: 500;
-  border-radius: 6px;
-  cursor: pointer;
-  background: crimson;
-  border: 2px solid crimson;
-  transition: 0.3s;
-}
-.right form .button-area button:hover {
-  color: crimson;
-  background: none;
+
+/* Grid layout: info + form */
+.contact .contact-content {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 40px;
+  align-items: start;
 }
 
-/* popups */
+/* Panels */
+.contact .contact-content .column {
+  background: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.25);
+}
+
+/* Left info */
+.contact .contact-content .text {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.contact .contact-content .left p {
+  color: #d8d8d8;
+  margin-bottom: 18px;
+  line-height: 1.55;
+}
+.contact .contact-content .left .icons {
+  margin-top: 6px;
+}
+.contact .contact-content .row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 14px;
+  align-items: center;
+  min-height: 48px;
+  margin-bottom: 14px;
+}
+.contact .contact-content .row i {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(220, 20, 60, 0.14);
+  color: crimson;
+  font-size: 16px;
+}
+.contact .contact-content .info .head {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.contact .contact-content .info .sub-title {
+  color: #cfcfcf;
+  font-size: 14.5px;
+  word-break: break-word;
+}
+
+/* Form */
+.contact .right form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.contact .right form .fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Inputs / Textarea */
+.contact .right form .field,
+.contact .right form .fields .field {
+  margin: 0;
+  width: 100%;
+  height: auto;
+}
+.contact input,
+.contact textarea {
+  width: 100%;
+  background: #0f0f10;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.contact input::placeholder,
+.contact textarea::placeholder {
+  color: #9b9b9b;
+}
+.contact input:focus,
+.contact textarea:focus {
+  border-color: crimson;
+  box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.25);
+  background: #101214;
+}
+.contact textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+/* Button */
+.right form .button-area {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+.right form .button-area button {
+  background: crimson;
+  border: 1px solid transparent;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: 12px;
+  transition: transform 0.12s, box-shadow 0.2s;
+}
+.right form .button-area button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(220, 20, 60, 0.35);
+}
+.right form .button-area button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* =========================================================
+   Popups (success / error)
+========================================================= */
 .popup,
 .error {
   width: 400px;
@@ -734,7 +814,7 @@ section .title::after {
   padding: 0 30px 30px;
   visibility: hidden;
   transition: transform 0.4s, top 0.4ms;
-  z-index: 1;
+  z-index: 1000;
 }
 .popup {
   background: crimson;
@@ -763,10 +843,8 @@ section .title::after {
   color: #fff;
   display: block;
   width: 160px !important;
-  margin-top: 20%;
-  margin-left: 25%;
+  margin: 20% auto 0;
   height: 45px;
-  outline: none;
   font-size: 18px;
   font-weight: bold;
   border-radius: 6px;
@@ -777,7 +855,6 @@ section .title::after {
 }
 .popup button:hover {
   color: #252223;
-  font-weight: bold;
   background: none;
 }
 
@@ -808,12 +885,9 @@ section .title::after {
 }
 .error button {
   color: #000;
-  display: block;
   width: 160px !important;
-  margin-top: 20%;
-  margin-left: 25%;
+  margin: 20% auto 0;
   height: 45px;
-  outline: none;
   font-size: 18px;
   font-weight: bold;
   border-radius: 6px;
@@ -824,11 +898,12 @@ section .title::after {
 }
 .error button:hover {
   color: crimson;
-  font-weight: bold;
   background: none;
 }
 
-/* footer */
+/* =========================================================
+   Footer
+========================================================= */
 footer {
   background: #fff;
   padding: 15px 23px;
@@ -842,8 +917,6 @@ footer span a {
 footer span a:hover {
   text-decoration: underline;
 }
-
-/* Social */
 .footer .social-icons {
   margin-top: 20px;
 }
@@ -856,11 +929,13 @@ footer span a:hover {
   font-size: 30px;
 }
 
-/* responsive */
+/* =========================================================
+   Responsive
+========================================================= */
 @media (max-width: 1104px) {
   .about .about-content .left img {
-    height: 350px;
-    width: 350px;
+    width: 300px;
+    height: 300px;
   }
 }
 @media (max-width: 991px) {
@@ -898,6 +973,7 @@ footer span a:hover {
     margin: 20px 0;
     font-size: 25px;
   }
+
   .home .home-content .text-2 {
     font-size: 70px;
   }
@@ -905,27 +981,26 @@ footer span a:hover {
     font-size: 35px;
   }
   .home .home-content a {
-    font-size: 23px;
-    padding: 10px 30px;
+    font-size: 21px;
+    padding: 10px 26px;
   }
+
   .max-width {
     max-width: 930px;
   }
-  .about .about-content .column {
-    width: 100%;
+
+  .about .about-content {
+    grid-template-columns: 1fr;
   }
   .about .about-content .left {
-    display: flex;
-    justify-content: center;
-    margin: 0 auto 60px;
+    margin: 0 auto 28px;
   }
-  .about .about-content .right {
-    flex: 100%;
+  .about .about-content .right p {
+    padding: 16px;
   }
-  /* removed old skills width override to avoid breaking grid */
-  .contact .contact-content .column {
-    width: 100%;
-    margin-bottom: 35px;
+
+  .skills-content .columns {
+    grid-template-columns: 1fr;
   }
 }
 @media (max-width: 690px) {
@@ -942,13 +1017,24 @@ footer span a:hover {
     font-size: 20px;
   }
 }
-@media (max-width: 600px) {
+@media (max-width: 620px) {
   :root {
     --card-height: 520px;
   }
   .tags.scrollbox {
     min-height: 110px;
     max-height: 110px;
+  }
+  .contact .contact-content {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .contact .right form .fields {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .right form .button-area button {
+    width: 100%;
   }
 }
 @media (max-width: 500px) {
@@ -957,10 +1043,9 @@ footer span a:hover {
     width: 300px;
     height: 330px;
   }
-  .error button,
-  .popup button {
+  .popup button,
+  .error button {
     margin-top: 10%;
-    margin-left: 15%;
   }
   .home .home-content .text-2 {
     font-size: 50px;
@@ -969,17 +1054,7 @@ footer span a:hover {
     font-size: 27px;
   }
   .about .about-content .right .text {
-    font-size: 19px;
-  }
-  .contact .right form .fields {
-    flex-direction: column;
-  }
-  .contact .right form .name,
-  .contact .right form .email {
-    margin: 0;
-  }
-  .right form .error-box {
-    width: 150px;
+    font-size: 22px;
   }
   .scroll-up-btn {
     right: 15px;
@@ -991,7 +1066,7 @@ footer span a:hover {
   }
 }
 
-/* gap fallback */
+/* Fallback when no flex gap support */
 @supports not (gap: 10px) {
   .tags .tag {
     margin: 6px 7px;
