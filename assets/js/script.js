@@ -1,4 +1,3 @@
-// script.js
 $(document).ready(function () {
   /* ==================== NAV + SCROLL ==================== */
   $(window).on("scroll", function () {
