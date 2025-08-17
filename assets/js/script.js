@@ -1,62 +1,100 @@
 // assets/js/script.js
 $(document).ready(function () {
-  /* ==================== NAV + SCROLL ==================== */
+  /* ---------------- NAV + SCROLL ---------------- */
   $(window).on("scroll", function () {
     if (this.scrollY > 20) $(".navbar").addClass("sticky");
     else $(".navbar").removeClass("sticky");
-
     if (this.scrollY > 500) $(".scroll-up-btn").addClass("show");
     else $(".scroll-up-btn").removeClass("show");
   });
-
   $(".scroll-up-btn").on("click", function () {
     $("html").animate({ scrollTop: 0 });
     $("html").css("scrollBehavior", "auto");
   });
-
   $(".navbar .menu li a").on("click", function () {
     $("html").css("scrollBehavior", "smooth");
   });
-
   $(".menu-btn").on("click", function () {
     $(".navbar .menu").toggleClass("active");
     $(".menu-btn i").toggleClass("active");
   });
 
-  /* ==================== TYPED TEXT ==================== */
-  new Typed(".typing", {
-    strings: ["Software Engineer"],
-    typeSpeed: 100,
-    backSpeed: 60,
-    loop: true,
-  });
-  new Typed(".typing-2", {
-    strings: ["Software Engineer"],
-    typeSpeed: 100,
-    backSpeed: 60,
-    loop: true,
-  });
+  /* ---------------- Typed text (roles) ---------------- */
+  function startTyping(roles) {
+    const list =
+      Array.isArray(roles) && roles.length ? roles : ["Software Engineer"];
+    new Typed(".typing", {
+      strings: list,
+      typeSpeed: 100,
+      backSpeed: 60,
+      loop: true,
+    });
+    new Typed(".typing-2", {
+      strings: list,
+      typeSpeed: 100,
+      backSpeed: 60,
+      loop: true,
+    });
+  }
 
-  /* ==================== DATA SOURCES ==================== */
-  const LOCAL_JSON = "assets/data/portfolio.json"; // <-- your JSON file
-  const GH_USER = "Induranga-kawishwara"; // fallback: GitHub username
+  /* ---------------- Constants ---------------- */
+  const LOCAL_JSON = "assets/data/portfolio.json"; // JSON-first
+  const GH_USER = "Induranga-kawishwara"; // GitHub fallback
   const MAX_REPOS = 10;
   const MAX_VISIBLE_CHIPS = 6;
-
   const $carousel = $("#github-carousel");
 
-  // Util
   const BASE_HEADERS = {
     Accept:
       "application/vnd.github+json, application/vnd.github.mercy-preview+json",
     "X-GitHub-Api-Version": "2022-11-28",
   };
+
+  const NOISE_LANGS = new Set([
+    "Makefile",
+    "CMake",
+    "QMake",
+    "Batchfile",
+    "Shell",
+    "PowerShell",
+    "Dockerfile",
+    "Procfile",
+    "GLSL",
+    "ShaderLab",
+  ]);
+
+  const FW_MAP = {
+    react: "React",
+    reactjs: "React",
+    nextjs: "Next.js",
+    vue: "Vue",
+    angular: "Angular",
+    svelte: "Svelte",
+    node: "Node.js",
+    nodejs: "Node.js",
+    express: "Express",
+    spring: "Spring",
+    "spring-boot": "Spring Boot",
+    django: "Django",
+    flask: "Flask",
+    fastapi: "FastAPI",
+    dotnet: ".NET",
+    aspnet: "ASP.NET",
+    aspnetcore: "ASP.NET Core",
+    bootstrap: "Bootstrap",
+    tailwind: "Tailwind CSS",
+    tailwindcss: "Tailwind CSS",
+    flutter: "Flutter",
+    kivy: "Kivy",
+  };
+
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const jitter = (ms) => ms + Math.floor(Math.random() * 200);
   const truncate = (txt, n) =>
     !txt ? "" : txt.length > n ? txt.slice(0, n - 1) + "…" : txt;
   const displayName = (n) => (n || "").replace(/[_-]+/g, " ").trim();
 
-  // Gradient fallback for covers
+  /* ---------------- Pretty cover fallback ---------------- */
   function hashCode(str) {
     let h = 0;
     for (let i = 0; i < str.length; i++) {
@@ -84,20 +122,17 @@ $(document).ready(function () {
     ];
     const i = Math.abs(hashCode(title)) % palettes.length;
     const [c1, c2] = palettes[i];
-    const titleSafe = escapeXML(title).slice(0, 36);
-    const svg = `
-    <svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'>
+    const t = escapeXML(title).slice(0, 36);
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'>
       <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
-        <stop offset='0' stop-color='${c1}'/><stop offset='1' stop-color='${c2}'/>
-      </linearGradient></defs>
+        <stop offset='0' stop-color='${c1}'/><stop offset='1' stop-color='${c2}'/></linearGradient></defs>
       <rect width='1200' height='630' fill='url(#g)'/>
-      <text x='60' y='360' font-family='Poppins, Ubuntu, Arial' font-size='72' font-weight='700'
-            fill='rgba(255,255,255,.92)'>${titleSafe}</text>
+      <text x='60' y='360' font-family='Poppins, Ubuntu, Arial' font-size='72' font-weight='700' fill='rgba(255,255,255,.92)'>${t}</text>
     </svg>`;
     return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
   }
 
-  // Chips builder
+  /* ---------------- Chips ---------------- */
   function badges(langs, fws) {
     const total = (langs?.length || 0) + (fws?.length || 0);
     const extra = total > MAX_VISIBLE_CHIPS ? " scrollbox" : "";
@@ -110,7 +145,36 @@ $(document).ready(function () {
     return `<div class="tags${extra}">${langBadges}${fwBadges}</div>`;
   }
 
-  /* ==================== RENDER: LOCAL JSON PROJECT ==================== */
+  /* ---------------- Apply About/Profile from JSON ---------------- */
+  function applyProfileAndAbout(data) {
+    if (!data) return;
+
+    // Name + roles
+    if (data.profile?.name) {
+      $(".home .text-2").text(data.profile.name);
+      $(".js-name").text(data.profile.name.split(" ")[0] || data.profile.name);
+    }
+    startTyping(data.profile?.roles);
+
+    // Photo & CV
+    if (data.profile?.photo) $(".js-photo").attr("src", data.profile.photo);
+    if (data.profile?.cv_url)
+      $(".home a[href*='drive.google']").attr("href", data.profile.cv_url);
+
+    // Bio
+    if (data.about?.bio) $(".js-bio").text(data.about.bio);
+
+    // Links
+    const $links = $(".js-about-links").empty();
+    const mk = (href, label) =>
+      `<a href="${href}" target="_blank" class="about-link">${label}</a>`;
+    if (data.links?.linkedin)
+      $links.append(mk(data.links.linkedin, "LinkedIn"));
+    if (data.links?.medium) $links.append(mk(data.links.medium, "Medium"));
+    if (data.links?.github) $links.append(mk(data.links.github, "GitHub"));
+  }
+
+  /* ---------------- JSON Projects ---------------- */
   function projectCardFromJSON(p) {
     const title = p.title || "Untitled";
     const cover = p.cover || gradientPlaceholder(title);
@@ -120,7 +184,6 @@ $(document).ready(function () {
       ? `<a href="${p.live}" target="_blank" rel="noopener" class="live-link">Live Site</a>`
       : "";
     const desc = truncate(p.description || "", 120);
-
     return `
       <div class="card">
         <a href="${
@@ -144,68 +207,46 @@ $(document).ready(function () {
     `;
   }
 
-  async function loadLocalProjects() {
+  async function loadLocalJSON() {
     const res = await fetch(LOCAL_JSON, { cache: "no-store" });
     if (!res.ok) throw new Error("No local JSON");
     const data = await res.json();
+
+    applyProfileAndAbout(data);
+
     const projects = Array.isArray(data.projects) ? data.projects : [];
-    if (!projects.length) throw new Error("Empty projects");
+    if (!projects.length) return { usedProjects: false };
+
     $carousel.empty();
     projects.forEach((p) => $carousel.append(projectCardFromJSON(p)));
-    return true;
+    return { usedProjects: true };
   }
 
-  /* ==================== FALLBACK: GITHUB PROJECTS ==================== */
-  const NOISE_LANGS = new Set([
-    "Makefile",
-    "CMake",
-    "QMake",
-    "Batchfile",
-    "Shell",
-    "PowerShell",
-    "Dockerfile",
-    "Procfile",
-    "GLSL",
-    "ShaderLab",
-  ]);
-  const FW_MAP = {
-    react: "React",
-    reactjs: "React",
-    nextjs: "Next.js",
-    vue: "Vue",
-    angular: "Angular",
-    svelte: "Svelte",
-    node: "Node.js",
-    nodejs: "Node.js",
-    express: "Express",
-    spring: "Spring",
-    "spring-boot": "Spring Boot",
-    django: "Django",
-    flask: "Flask",
-    fastapi: "FastAPI",
-    dotnet: ".NET",
-    aspnet: "ASP.NET",
-    aspnetcore: "ASP.NET Core",
-    bootstrap: "Bootstrap",
-    tailwind: "Tailwind CSS",
-    tailwindcss: "Tailwind CSS",
-    flutter: "Flutter",
-    kivy: "Kivy",
-  };
+  /* ---------------- GitHub Fallback (show ALL languages) ---------------- */
+  async function fetchWithRetries(url, maxAttempts = 4) {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const res = await fetch(url, { headers: BASE_HEADERS });
+      if (res.ok) return res;
+
+      // Abuse/rate limits: 403/429 -> exponential backoff with jitter
+      if (
+        (res.status === 403 || res.status === 429) &&
+        attempt < maxAttempts - 1
+      ) {
+        const retryAfter = Number(res.headers.get("Retry-After"));
+        const wait = retryAfter
+          ? retryAfter * 1000
+          : jitter(600 * Math.pow(2, attempt));
+        await sleep(wait);
+        continue;
+      }
+      throw new Error(`GitHub error ${res.status}`);
+    }
+    throw new Error("GitHub retries exceeded");
+  }
+
   const repoImage = (owner, name) =>
     `https://opengraph.githubassets.com/1/${owner}/${name}`;
-
-  async function fetchGitHub(url, attempt = 0) {
-    const res = await fetch(url, { headers: BASE_HEADERS });
-    if (res.ok) return res;
-    if (res.status === 403 && attempt < 2) {
-      const retryAfter =
-        Number(res.headers.get("Retry-After")) || 1000 + attempt * 1500;
-      await sleep(retryAfter);
-      return fetchGitHub(url, attempt + 1);
-    }
-    throw new Error(`GitHub API error: ${res.status}`);
-  }
 
   function isMetaRepo(r) {
     const name = (r.name || "").toLowerCase();
@@ -227,14 +268,12 @@ $(document).ready(function () {
     const title = displayName(repo.name);
     const cover = repoImage(repo.owner.login, repo.name);
     const fallback = gradientPlaceholder(title);
-
     const stars = repo.stargazers_count || 0;
     const updated = new Date(
       repo.updated_at || repo.pushed_at || repo.created_at
     ).toLocaleDateString();
     const langs = repo._languages || [];
     const fws = frameworksFromTopics(repo.topics || []);
-
     const rawDesc = repo.description || "";
     const desc = truncate(rawDesc.replace(/\blive\s*site\b/gi, "").trim(), 120);
     const live =
@@ -243,7 +282,6 @@ $(document).ready(function () {
       !/^https?:\/\/github\.com/i.test(repo.homepage)
         ? `<a href="${repo.homepage}" target="_blank" rel="noopener" class="live-link">Live Site</a>`
         : "";
-
     return `
       <div class="card">
         <a href="${
@@ -268,29 +306,34 @@ $(document).ready(function () {
     const url = `https://api.github.com/search/repositories?q=user:${encodeURIComponent(
       GH_USER
     )}&sort=updated&order=desc&per_page=100`;
-    const res = await fetchGitHub(url);
+    const res = await fetchWithRetries(url);
     const data = await res.json();
     return Array.isArray(data.items) ? data.items : [];
   }
 
+  // Fetch ALL languages reliably, even under rate limits
   async function addLanguages(repos) {
     for (let i = 0; i < repos.length; i++) {
       const r = repos[i];
       try {
-        const res = await fetchGitHub(r.languages_url);
-        const langMap = await res.json(); // { Lang: bytes }
+        const res = await fetchWithRetries(r.languages_url);
+        const langMap = await res.json(); // { language: bytes }
         const entries = Object.entries(langMap)
           .sort((a, b) => b[1] - a[1])
-          .filter(([l]) => !NOISE_LANGS.has(l));
-        r._languages = entries.length
-          ? entries.map(([l]) => l)
-          : r.language
-          ? [r.language]
-          : [];
-      } catch {
+          .filter(([lang]) => !NOISE_LANGS.has(lang));
+
+        // Keep *all* languages (not just the primary)
+        r._languages = entries.map(([lang]) => lang);
+
+        // If GitHub returns empty map, fallback to primary language
+        if (!r._languages.length && r.language) r._languages = [r.language];
+      } catch (err) {
+        // On failure, fallback to the primary language (what you were seeing before)
         r._languages = r.language ? [r.language] : [];
       }
-      await sleep(150);
+
+      // Be polite to avoid abuse detection
+      await sleep(jitter(450)); // ~450–650ms between calls
     }
     return repos;
   }
@@ -305,18 +348,20 @@ $(document).ready(function () {
           new Date(b.updated_at) - new Date(a.updated_at)
       )
       .slice(0, MAX_REPOS);
+
     await addLanguages(repos);
+
     $carousel.empty();
     repos.forEach((r) => $carousel.append(repoCard(r)));
   }
 
-  /* ==================== CAROUSEL INIT ==================== */
+  /* ---------------- Carousel ---------------- */
   function initOwl() {
     $carousel.owlCarousel({
       margin: 20,
       loop: true,
       autoplay: true,
-      autoplayTimeout: 2000,
+      autoplayTimeout: 2200,
       autoplayHoverPause: true,
       responsive: {
         0: { items: 1, nav: false },
@@ -326,7 +371,7 @@ $(document).ready(function () {
     });
   }
 
-  // Enable wheel scroll inside chip scrollboxes
+  // enable wheel scroll inside multi-row chip box
   $(document).on("wheel", ".tags", function (e) {
     const el = this,
       evt = e.originalEvent;
@@ -339,12 +384,14 @@ $(document).ready(function () {
     }
   });
 
-  /* ==================== BOOTSTRAP ==================== */
-  (async function initProjects() {
+  /* ---------------- Boot ---------------- */
+  (async function init() {
     try {
-      await loadLocalProjects(); // use your JSON
-    } catch (e) {
-      await loadGitHubProjects(); // fallback to GitHub if JSON missing/empty
+      const result = await loadLocalJSON(); // fills About + (maybe) projects
+      if (!result.usedProjects) await loadGitHubProjects();
+    } catch {
+      startTyping(); // roles fallback
+      await loadGitHubProjects();
     }
     initOwl();
   })();

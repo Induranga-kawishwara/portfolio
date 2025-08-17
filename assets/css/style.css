@@ -311,7 +311,7 @@ section .title::after {
 }
 .Projects .carousel .owl-stage {
   display: flex;
-} /* equal-height cards in carousel */
+}
 .Projects .carousel .owl-item {
   display: flex;
 }
@@ -365,8 +365,6 @@ section .title::after {
   text-align: center;
   margin-top: 6px;
 }
-
-/* description clamp (2 lines) */
 .repo-desc {
   text-align: center;
   opacity: 0.9;
@@ -409,7 +407,7 @@ section .title::after {
   transform: scale(1.02);
   transition: transform 0.35s ease;
 }
-/* hide any legacy circular image rule */
+/* hide old circular img rule if any */
 .Projects .carousel .card > a .box > img {
   display: none !important;
 }
@@ -830,7 +828,6 @@ footer span a:hover {
   z-index: 1;
 }
 
-/* Skill icon gradients */
 .fa-java {
   background: linear-gradient(45deg, #007396, #00b4d8);
   -webkit-background-clip: text;
@@ -1016,7 +1013,7 @@ footer span a:hover {
   }
 }
 
-/* fallback when browser doesn't support flex gap */
+/* gap fallback */
 @supports not (gap: 10px) {
   .tags .tag {
     margin: 6px 7px;

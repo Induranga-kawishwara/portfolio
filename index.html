@@ -5,20 +5,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfolio</title>
+
+    <!-- Favicon & Styles -->
     <link rel="shortcut icon" href="assets/images/ik_logo.ico" />
     <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- Fonts / Icons / Carousel -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
@@ -26,28 +22,26 @@
   </head>
   <body>
     <div class="main" id="main">
-      <div class="scroll-up-btn">
-        <i class="fas fa-angle-up"></i>
-      </div>
+      <div class="scroll-up-btn"><i class="fas fa-angle-up"></i></div>
+
+      <!-- Navbar -->
       <nav class="navbar">
         <div class="max-width">
           <div class="logo">
             <a href="#">Indura<span>nga.</span></a>
           </div>
           <ul class="menu">
-            <li><a href="#" class="menu-btn">Home</a></li>
+            <li><a href="#particles-js" class="menu-btn">Home</a></li>
             <li><a href="#about" class="menu-btn">About</a></li>
             <li><a href="#Projects" class="menu-btn">Projects</a></li>
             <li><a href="#skills" class="menu-btn">Skills</a></li>
             <li><a href="#contact" class="menu-btn">Contact</a></li>
           </ul>
-          <div class="menu-btn">
-            <i class="fas fa-bars"></i>
-          </div>
+          <div class="menu-btn"><i class="fas fa-bars"></i></div>
         </div>
       </nav>
 
-      <!-- home section start -->
+      <!-- Home -->
       <section class="home" id="particles-js">
         <div class="max-width">
           <div class="home-content">
@@ -56,56 +50,38 @@
             <div class="text-3">And I'm a <span class="typing"></span></div>
             <a
               href="https://drive.google.com/file/d/1q6xfaPSl9QKHHdfCMoeH7cwXX7t7dwSk/view?usp=sharing"
-              target="”_blank”"
+              target="_blank"
               >Download CV</a
             >
           </div>
         </div>
       </section>
 
-      <!-- about section start -->
+      <!-- About (driven entirely by portfolio.json) -->
       <section class="about" id="about">
         <div class="max-width">
           <h2 class="title">About me</h2>
           <div class="about-content">
             <div class="column left">
-              <img src="images/photo.png" alt="my picture" />
+              <img
+                src="assets/images/photo.png"
+                alt="my picture"
+                class="js-photo"
+              />
             </div>
             <div class="column right">
               <div class="text">
-                I'm Induranga and I'm a <span class="typing-2"></span>
+                I'm <span class="js-name">Induranga</span> and I'm a
+                <span class="typing-2"></span>
               </div>
-              <p>
-                I am a second-year student studying software engineering, and I
-                have a tremendous interest in technology and its ability to
-                solve issues in the real world. With a strong background in
-                programming languages including Javascript, Java, Python, and
-                web development languages, I have a knowledge of object-oriented
-                principles and software development techniques. I am constantly
-                keen to learn new technologies and programming languages to
-                maintain my current knowledge and abilities with the most recent
-                technological advancements.
-              </p>
-              <a
-                href="https://www.linkedin.com/in/induranga-kawishwara-333a88233/"
-                target="”_blank”"
-                >My Linkdin</a
-              >
-              <a
-                href="https://medium.com/@indurangakawishwara2003"
-                target="”_blank”"
-                >My Medium</a
-              >
-              <a
-                href="https://github.com/Induranga-kawishwara?tab=repositories"
-                target="”_blank”"
-                >My GitHub</a
-              >
+              <p class="js-bio"></p>
+              <div class="about-links js-about-links"></div>
             </div>
           </div>
         </div>
       </section>
-      <!-- Projects section start -->
+
+      <!-- Projects -->
       <section class="Projects" id="Projects">
         <div class="max-width">
           <h2 class="title">Projects</h2>
@@ -113,13 +89,13 @@
         </div>
       </section>
 
-      <!-- skills section start -->
+      <!-- Skills (static) -->
       <section class="skills" id="skills">
         <div class="max-width">
           <h2 class="title">My skills</h2>
           <div class="skills-content">
             <div class="columns">
-              <!-- Backend Skills -->
+              <!-- Backend -->
               <div class="column backend">
                 <div class="skill-header">
                   <i class="fas fa-server"></i>
@@ -127,29 +103,23 @@
                 </div>
                 <div class="skill-items">
                   <div class="skill-item">
-                    <i class="fab fa-java"></i>
-                    <span>Java</span>
+                    <i class="fab fa-java"></i><span>Java</span>
                   </div>
                   <div class="skill-item">
-                    <i class="fab fa-python"></i>
-                    <span>Python</span>
+                    <i class="fab fa-python"></i><span>Python</span>
                   </div>
                   <div class="skill-item">
-                    <i class="fab fa-php"></i>
-                    <span>PHP</span>
+                    <i class="fab fa-php"></i><span>PHP</span>
                   </div>
                   <div class="skill-item">
-                    <i class="fas fa-database"></i>
-                    <span>MySQL</span>
+                    <i class="fas fa-database"></i><span>MySQL</span>
                   </div>
                   <div class="skill-item">
-                    <i class="fas fa-chart-line"></i>
-                    <span>R</span>
+                    <i class="fas fa-chart-line"></i><span>R</span>
                   </div>
                 </div>
               </div>
-
-              <!-- Frontend Skills -->
+              <!-- Frontend -->
               <div class="column frontend">
                 <div class="skill-header">
                   <i class="fas fa-desktop"></i>
@@ -157,16 +127,13 @@
                 </div>
                 <div class="skill-items">
                   <div class="skill-item">
-                    <i class="fab fa-html5"></i>
-                    <span>HTML5</span>
+                    <i class="fab fa-html5"></i><span>HTML5</span>
                   </div>
                   <div class="skill-item">
-                    <i class="fab fa-css3-alt"></i>
-                    <span>CSS3</span>
+                    <i class="fab fa-css3-alt"></i><span>CSS3</span>
                   </div>
                   <div class="skill-item">
-                    <i class="fab fa-js-square"></i>
-                    <span>JavaScript</span>
+                    <i class="fab fa-js-square"></i><span>JavaScript</span>
                   </div>
                 </div>
               </div>
@@ -175,14 +142,14 @@
         </div>
       </section>
 
-      <!-- contact section start -->
+      <!-- Contact -->
       <section class="contact" id="contact">
         <div class="max-width">
           <h2 class="title">Contact me</h2>
           <div class="contact-content">
             <div class="column left">
               <div class="text">Get in Touch</div>
-              <p>If you want to contact me. send me a message</p>
+              <p>If you want to contact me, send me a message.</p>
               <div class="icons">
                 <div class="row">
                   <i class="fas fa-user"></i>
@@ -197,7 +164,7 @@
                   <i class="fas fa-map-marker-alt"></i>
                   <div class="info">
                     <div class="head">Address</div>
-                    <div class="sub-title">96/2 Mabulgoda,Pannipitiya</div>
+                    <div class="sub-title">96/2 Mabulgoda, Pannipitiya</div>
                   </div>
                 </div>
                 <div class="row">
@@ -223,7 +190,7 @@
                       type="text"
                       name="Name"
                       id="Name"
-                      required="required"
+                      required
                       placeholder="Name"
                     />
                   </div>
@@ -232,7 +199,7 @@
                       type="email"
                       name="Email"
                       id="Email"
-                      required="required"
+                      required
                       placeholder="Email"
                     />
                   </div>
@@ -242,7 +209,7 @@
                     type="text"
                     name="Subject"
                     id="Subject"
-                    required="required"
+                    required
                     placeholder="Subject"
                   />
                 </div>
@@ -252,7 +219,7 @@
                     rows="10"
                     name="message"
                     id="message"
-                    required="required"
+                    required
                     placeholder="Message.."
                   ></textarea>
                 </div>
@@ -265,9 +232,10 @@
         </div>
       </section>
     </div>
-    <!-- Thanks popup window -->
+
+    <!-- Thanks popup -->
     <div class="popup" id="popup">
-      <img src="images/Right.png" alt="Right_Sign" />
+      <img src="assets/images/Right.png" alt="Right_Sign" />
       <h2>THANK YOU !!</h2>
       <p>
         Thank You for Contacting Me<br />Your message has been sent
@@ -276,15 +244,15 @@
       <button type="submit" onclick="Okay()">OK</button>
     </div>
 
-    <!-- Error popup window -->
+    <!-- Error popup -->
     <div class="error" id="error">
-      <img src="images/wrong.png" alt="Error_Sign" />
+      <img src="assets/images/wrong.png" alt="Error_Sign" />
       <h2>Error While Sending Message</h2>
       <p>Check Your connection</p>
       <button type="submit" onclick="error()">OK</button>
     </div>
 
-    <!-- footer section start -->
+    <!-- Footer -->
     <footer>
       <span
         >Created By <span style="color: red">Induranga Kawishwara</span> | 2023
@@ -296,11 +264,11 @@
           target="_blank"
           ><i class="fab fa-facebook"></i></a
         >&nbsp;&nbsp;
-        <a href="https://github.com/Induranga-kawishwara"
-          ><i class="fab fa-github" target="_blank"></i></a
+        <a href="https://github.com/Induranga-kawishwara" target="_blank"
+          ><i class="fab fa-github"></i></a
         >&nbsp;&nbsp;
-        <a href="https://www.instagram.com/kawishwara_ik/"
-          ><i class="fab fa-instagram" target="_blank"></i></a
+        <a href="https://www.instagram.com/kawishwara_ik/" target="_blank"
+          ><i class="fab fa-instagram"></i></a
         >&nbsp;&nbsp;
         <a
           href="https://www.linkedin.com/in/induranga-kawishwara-333a88233/"
@@ -310,10 +278,17 @@
       </div>
     </footer>
 
+    <!-- Vendor JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- App JS -->
     <script src="https://smtpjs.com/v3/smtp.js"></script>
     <script src="assets/js/popup.js"></script>
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/vendor/particles.js"></script>
     <script src="assets/js/app.js"></script>
   </body>
 </html>

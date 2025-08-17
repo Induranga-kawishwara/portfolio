@@ -1,9 +1,14 @@
 {
   "profile": {
     "name": "Induranga Kawishwara",
-    "roles": ["Software Engineer"],
+    "roles": ["Software Engineer", "Full-Stack Developer", "Tech Enthusiast"],
     "cv_url": "https://drive.google.com/file/d/1q6xfaPSl9QKHHdfCMoeH7cwXX7t7dwSk/view?usp=sharing",
     "photo": "assets/images/photo.png"
+  },
+  "about": {
+    "headline": "Second-year Software Engineering student",
+    "bio": "I am a second-year student studying software engineering, and I have a tremendous interest in technology and its ability to solve issues in the real world. With a strong background in JavaScript, Java, Python and web technologies, I understand OOP and software development practices. I’m always learning new tools and languages to stay current with modern tech.",
+    "location": "Pannipitiya, Sri Lanka"
   },
   "links": {
     "github": "https://github.com/Induranga-kawishwara",
