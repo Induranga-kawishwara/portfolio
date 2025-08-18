@@ -1,0 +1,97 @@
+name: Build repos.json
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *" # daily
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      GH_USER: ${{ secrets.GH_USER }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate assets/data/github_repos.json
+        uses: actions/github-script@v7
+        with:
+          # Use the built-in GITHUB_TOKEN (safe for Actions). If you have a PAT, swap to: secrets.PAT
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = 'assets/data/github_repos.json';
+            const user = process.env.GH_USER || context.repo.owner;
+            const MAX_REPOS = 10;
+
+            const skip = new Set([user.toLowerCase(), '.github', `${user.toLowerCase()}.github.io`]);
+
+            // 1) Find repos
+            const search = await github.rest.search.repos({
+              q: `user:${user}`,
+              sort: 'updated',
+              order: 'desc',
+              per_page: 30
+            });
+
+            let repos = search.data.items
+              .filter(r => !r.fork && !r.archived && !r.is_template && !skip.has(r.name.toLowerCase()))
+              .slice(0, MAX_REPOS);
+
+            // 2) Enrich languages + topics (parallel, limited)
+            async function mapLimit(items, limit, worker) {
+              const arr = items.map((_, i) => i);
+              let idx = 0;
+              const out = new Array(items.length);
+              await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
+                while (idx < items.length) {
+                  const i = idx++;
+                  out[i] = await worker(items[i], i);
+                }
+              }));
+              return out;
+            }
+
+            repos = await mapLimit(repos, 6, async (r) => {
+              // languages
+              try {
+                const langs = await github.request(r.languages_url, { headers: { accept: 'application/vnd.github+json' } });
+                r._languages = Object.entries(langs.data).sort((a,b)=>b[1]-a[1]).map(([k])=>k);
+              } catch { r._languages = r.language ? [r.language] : []; }
+
+              // topics
+              try {
+                const topics = await github.rest.repos.getAllTopics({ owner: r.owner.login, repo: r.name });
+                r._topics = topics.data.names || [];
+              } catch { r._topics = []; }
+
+              // keep only used fields
+              return {
+                name: r.name,
+                full_name: r.full_name,
+                html_url: r.html_url,
+                homepage: r.homepage,
+                description: r.description,
+                stargazers_count: r.stargazers_count,
+                created_at: r.created_at,
+                updated_at: r.updated_at,
+                pushed_at: r.pushed_at,
+                owner: { login: r.owner.login },
+                _languages: r._languages,
+                _topics: r._topics
+              };
+            });
+
+            fs.mkdirSync('assets/data', { recursive: true });
+            fs.writeFileSync(path, JSON.stringify(repos, null, 2));
+            core.info(`Wrote ${path} with ${repos.length} repos`);
+
+      - name: Commit file
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update github_repos.json"
+          file_pattern: assets/data/github_repos.json

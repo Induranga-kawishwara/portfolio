@@ -7,13 +7,16 @@ $(document).ready(function () {
     if (this.scrollY > 500) $(".scroll-up-btn").addClass("show");
     else $(".scroll-up-btn").removeClass("show");
   });
+
   $(".scroll-up-btn").on("click", function () {
     $("html").animate({ scrollTop: 0 });
     $("html").css("scrollBehavior", "auto");
   });
+
   $(".navbar .menu li a").on("click", function () {
     $("html").css("scrollBehavior", "smooth");
   });
+
   $(".menu-btn").on("click", function () {
     $(".navbar .menu").toggleClass("active");
     $(".menu-btn i").toggleClass("active");
@@ -38,13 +41,18 @@ $(document).ready(function () {
   }
 
   /* ---------------- Consts ---------------- */
-  const LOCAL_JSON = "assets/data/portfolio.json";
-  const GH_USER = "Induranga-kawishwara";
+  const LOCAL_JSON = "assets/data/portfolio.json"; // your profile/skills/projects (manual)
+  const GH_JSON = "assets/data/github_repos.json"; // built by GitHub Actions (cached)
+  const GH_USER = "Induranga-kawishwara"; // change if needed
+
   const MAX_REPOS = 10;
   const MAX_VISIBLE_CHIPS = 6;
 
-  // OPTIONAL token (improves rate limit). Keep empty if you don't want it.
-  const GITHUB_TOKEN = ""; // e.g. "ghp_xxx"
+  // DO NOT set any token in the browser. Leave null.
+  const GITHUB_TOKEN = null;
+
+  // Parallel workers for fast enrichment
+  const ENRICH_CONCURRENCY = GITHUB_TOKEN ? 8 : 3;
 
   const $carousel = $("#github-carousel");
   let owlInitialized = false;
@@ -94,13 +102,48 @@ $(document).ready(function () {
     kivy: "Kivy",
   };
 
+  const ICONS = {
+    java: "fab fa-java",
+    python: "fab fa-python",
+    php: "fab fa-php",
+    mysql: "fas fa-database",
+    sqlite: "fas fa-database",
+    mongodb: "fas fa-database",
+    r: "fas fa-chart-line",
+    html: "fab fa-html5",
+    html5: "fab fa-html5",
+    css: "fab fa-css3-alt",
+    css3: "fab fa-css3-alt",
+    javascript: "fab fa-js-square",
+    js: "fab fa-js-square",
+    typescript: "fab fa-js",
+    react: "fab fa-react",
+    bootstrap: "fab fa-bootstrap",
+    "tailwind css": "fas fa-wind",
+    tailwind: "fas fa-wind",
+    "node.js": "fab fa-node",
+    node: "fab fa-node",
+    express: "fas fa-route",
+    "spring boot": "fas fa-leaf",
+    spring: "fas fa-seedling",
+    django: "fas fa-leaf",
+    flask: "fas fa-flask",
+    git: "fab fa-git-alt",
+    github: "fab fa-github",
+    docker: "fab fa-docker",
+    figma: "fab fa-figma",
+    swift: "fab fa-swift",
+    kotlin: "fas fa-mobile-alt",
+    "next.js": "fas fa-code-branch",
+    fastapi: "fas fa-bolt",
+  };
+
+  /* ---------------- Utils ---------------- */
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-  const jitter = (ms) => ms + Math.floor(Math.random() * 200);
   const truncate = (txt, n) =>
     !txt ? "" : txt.length > n ? txt.slice(0, n - 1) + "…" : txt;
   const displayName = (n) => (n || "").replace(/[_-]+/g, " ").trim();
 
-  /* ----------- gradient banner fallback ----------- */
   function hashCode(str) {
     let h = 0;
     for (let i = 0; i < str.length; i++) {
@@ -138,7 +181,14 @@ $(document).ready(function () {
     return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
   }
 
-  /* ----------- chips ----------- */
+  function pickIcon(name) {
+    const k = String(name || "")
+      .toLowerCase()
+      .trim();
+    return ICONS[k] || (k.includes("db") ? "fas fa-database" : "fas fa-code");
+  }
+
+  /* ---------------- Chips ---------------- */
   function badges(langs, fws) {
     const total = (langs?.length || 0) + (fws?.length || 0);
     const extra = total > MAX_VISIBLE_CHIPS ? " scrollbox" : "";
@@ -151,7 +201,7 @@ $(document).ready(function () {
     return `<div class="tags${extra}">${langBadges}${fwBadges}</div>`;
   }
 
-  /* ----------- Owl helpers ----------- */
+  /* ---------------- Owl helpers ---------------- */
   function initOwl() {
     $carousel.owlCarousel({
       margin: 20,
@@ -163,6 +213,7 @@ $(document).ready(function () {
     });
     owlInitialized = true;
   }
+
   function mountCards(htmlArray) {
     if (owlInitialized) {
       $carousel.trigger("destroy.owl.carousel");
@@ -175,82 +226,33 @@ $(document).ready(function () {
     initOwl();
   }
 
-  /* ----------- ICON map for skills ----------- */
-  const ICONS = {
-    java: "fab fa-java",
-    python: "fab fa-python",
-    php: "fab fa-php",
-    mysql: "fas fa-database",
-    sqlite: "fas fa-database",
-    mongodb: "fas fa-database",
-    r: "fas fa-chart-line",
-    html: "fab fa-html5",
-    html5: "fab fa-html5",
-    css: "fab fa-css3-alt",
-    css3: "fab fa-css3-alt",
-    javascript: "fab fa-js-square",
-    js: "fab fa-js-square",
-    typescript: "fab fa-js",
-    react: "fab fa-react",
-    bootstrap: "fab fa-bootstrap",
-    "tailwind css": "fas fa-wind",
-    tailwind: "fas fa-wind",
-    "node.js": "fab fa-node",
-    node: "fab fa-node",
-    express: "fas fa-route",
-    "spring boot": "fas fa-leaf",
-    spring: "fas fa-seedling",
-    django: "fas fa-leaf",
-    flask: "fas fa-flask",
-    git: "fab fa-git-alt",
-    github: "fab fa-github",
-    docker: "fab fa-docker",
-    figma: "fab fa-figma",
-    swift: "fab fa-swift",
-    kotlin: "fas fa-mobile-alt",
-    "next.js": "fas fa-code-branch",
-    fastapi: "fas fa-bolt",
-  };
-  const pickIcon = (name) => {
-    const k = String(name || "")
-      .toLowerCase()
-      .trim();
-    return ICONS[k] || (k.includes("db") ? "fas fa-database" : "fas fa-code");
-  };
-
-  /* ----------- Skills from JSON ----------- */
+  /* ---------------- Skills from JSON ---------------- */
   function renderSkills(skillsObj) {
     if (!skillsObj || typeof skillsObj !== "object") return;
     const $root = $(".js-skills").empty();
-
     const $columns = $('<div class="columns"></div>');
     Object.entries(skillsObj).forEach(([category, items]) => {
       const title = category.charAt(0).toUpperCase() + category.slice(1);
       const $col = $('<div class="column"></div>');
       const $header = $(`
         <div class="skill-header">
-          <i class="fas fa-check-circle"></i>
-          <h3>${title}</h3>
+          <i class="fas fa-check-circle"></i><h3>${title}</h3>
         </div>
       `);
       const $items = $('<div class="skill-items"></div>');
       (items || []).forEach((name) => {
         const icon = pickIcon(name);
-        $items.append(`
-          <div class="skill-item">
-            <i class="${icon}"></i>
-            <span>${name}</span>
-          </div>
-        `);
+        $items.append(
+          `<div class="skill-item"><i class="${icon}"></i><span>${name}</span></div>`
+        );
       });
       $col.append($header).append($items);
       $columns.append($col);
     });
-
     $root.append($columns);
   }
 
-  /* ----------- About from JSON ----------- */
+  /* ---------------- About/Profile from JSON ---------------- */
   function applyProfileAndAbout(data) {
     if (!data) return;
 
@@ -259,6 +261,7 @@ $(document).ready(function () {
       const first = data.profile.name.split(" ")[0] || data.profile.name;
       $(".js-first-name").text(first);
     }
+
     startTyping(data.profile?.roles);
 
     if (data.profile?.photo) $(".js-photo").attr("src", data.profile.photo);
@@ -283,7 +286,7 @@ $(document).ready(function () {
     if (data.skills) renderSkills(data.skills);
   }
 
-  /* ----------- JSON project card ----------- */
+  /* ---------------- Project card from local JSON (manual) ---------------- */
   function projectCardFromJSON(p) {
     const title = p.title || "Untitled";
     const cover = p.cover || gradientPlaceholder(title);
@@ -297,7 +300,7 @@ $(document).ready(function () {
       <div class="card">
         <a href="${
           p.repo || "#"
-        }" style="color: rgb(248, 246, 246)" target="_blank" rel="noopener">
+        }" style="color:#f8f6f6" target="_blank" rel="noopener">
           <div class="box">
             <div class="thumb">
               <img src="${cover}" alt="${title}" loading="lazy"
@@ -316,24 +319,38 @@ $(document).ready(function () {
     `;
   }
 
-  /* ----------- Render JSON first (instant) ----------- */
+  /* ---------------- Render from local JSON first (instant) ---------------- */
   async function renderFromLocalJSON() {
     const res = await fetch(LOCAL_JSON, { cache: "no-store" });
     if (!res.ok) throw new Error("No local JSON");
     const data = await res.json();
-
     applyProfileAndAbout(data);
 
     const projects = Array.isArray(data.projects) ? data.projects : [];
     if (projects.length) {
       const html = projects.map(projectCardFromJSON);
-      mountCards(html); // show placeholders NOW
+      mountCards(html); // show manual projects immediately
     }
     return projects.length > 0;
   }
 
-  /* ----------- robust fetch with backoff ----------- */
-  async function fetchWithRetries(url, maxAttempts = 5) {
+  /* ---------------- Cached GitHub JSON (built by Actions) ---------------- */
+  async function renderFromCachedGH() {
+    try {
+      const res = await fetch(GH_JSON, { cache: "no-store" });
+      if (!res.ok) return false;
+      const repos = await res.json();
+      if (!Array.isArray(repos) || !repos.length) return false;
+      const html = repos.map(repoCard);
+      mountCards(html);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /* ---------------- Robust fetch with backoff ---------------- */
+  async function fetchWithRetries(url, maxAttempts = 6) {
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const res = await fetch(url, { headers: BASE_HEADERS });
       if (res.ok) return res;
@@ -341,21 +358,18 @@ $(document).ready(function () {
       if (res.status === 403 || res.status === 429) {
         const retryAfter = Number(res.headers.get("Retry-After"));
         const remaining = Number(res.headers.get("x-ratelimit-remaining"));
-        const resetAt = Number(res.headers.get("x-ratelimit-reset")) * 1000;
-        let wait = 0;
-        if (retryAfter) {
-          wait = retryAfter * 1000;
-        } else if (!isNaN(remaining) && remaining === 0 && !isNaN(resetAt)) {
-          wait = Math.max(1500, resetAt - Date.now() + 500);
-        } else {
-          wait = 1200 + attempt * 800 + Math.floor(Math.random() * 300);
+        const resetAtSec = Number(res.headers.get("x-ratelimit-reset"));
+        let wait = 700 + attempt * 450 + Math.floor(Math.random() * 250);
+        if (!isNaN(retryAfter) && retryAfter > 0) wait = retryAfter * 1000;
+        else if (!isNaN(remaining) && remaining === 0 && !isNaN(resetAtSec)) {
+          wait = Math.max(1000, resetAtSec * 1000 - Date.now() + 800);
         }
         await sleep(wait);
         continue;
       }
 
       if (res.status >= 500 && res.status < 600) {
-        await sleep(800 + attempt * 400);
+        await sleep(600 + attempt * 350);
         continue;
       }
       throw new Error(`GitHub error ${res.status}`);
@@ -363,7 +377,7 @@ $(document).ready(function () {
     throw new Error("GitHub retries exceeded");
   }
 
-  /* ----------- GitHub helpers ----------- */
+  /* ---------------- GitHub helpers (live/fallback) ---------------- */
   const repoImage = (owner, name) =>
     `https://opengraph.githubassets.com/1/${owner}/${name}`;
 
@@ -413,7 +427,7 @@ $(document).ready(function () {
       <div class="card">
         <a href="${
           repo.html_url
-        }" style="color: rgb(248, 246, 246)" target="_blank" rel="noopener">
+        }" style="color:#f8f6f6" target="_blank" rel="noopener">
           <div class="box">
             <div class="thumb">
               <img src="${cover}" alt="${title}" loading="lazy" onerror="this.onerror=null;this.src='${fallback}';" />
@@ -429,42 +443,50 @@ $(document).ready(function () {
     `;
   }
 
-  async function fetchReposWithTopics() {
+  async function fetchReposList() {
+    const per = Math.min(MAX_REPOS, 30);
     const url = `https://api.github.com/search/repositories?q=user:${encodeURIComponent(
       GH_USER
-    )}&sort=updated&order=desc&per_page=100`;
+    )}&sort=updated&order=desc&per_page=${per}`;
     const res = await fetchWithRetries(url);
     const data = await res.json();
     return Array.isArray(data.items) ? data.items : [];
   }
 
-  async function enrichRepos(repos) {
-    for (let i = 0; i < repos.length; i++) {
-      const r = repos[i];
-      try {
-        // Languages
-        const langRes = await fetchWithRetries(r.languages_url);
-        const langMap = await langRes.json();
-        const entries = Object.entries(langMap)
-          .sort((a, b) => b[1] - a[1])
-          .filter(([lang]) => !NOISE_LANGS.has(lang));
-        r._languages = entries.map(([lang]) => lang);
-        if (!r._languages.length && r.language) r._languages = [r.language];
-
-        // Topics
-        r._topics = await fetchRepoTopics(r.owner.login, r.name);
-      } catch {
-        r._languages = r.language ? [r.language] : [];
-        r._topics = [];
-      }
-      // polite delay for unauthenticated use
-      await sleep(1300 + Math.floor(Math.random() * 600));
+  async function enrichOne(r) {
+    try {
+      const [langMap, topics] = await Promise.all([
+        fetchWithRetries(r.languages_url).then((x) => x.json()),
+        fetchRepoTopics(r.owner.login, r.name),
+      ]);
+      const entries = Object.entries(langMap)
+        .sort((a, b) => b[1] - a[1])
+        .filter(([lang]) => !NOISE_LANGS.has(lang));
+      r._languages = entries.map(([lang]) => lang);
+      r._topics = topics;
+    } catch {
+      r._languages = r.language ? [r.language] : [];
+      r._topics = [];
     }
+    return r;
+  }
+
+  async function enrichReposParallel(repos, limit = ENRICH_CONCURRENCY) {
+    let i = 0;
+    async function worker() {
+      while (i < repos.length) {
+        const idx = i++;
+        await enrichOne(repos[idx]);
+      }
+    }
+    await Promise.all(
+      Array.from({ length: Math.min(limit, repos.length) }, worker)
+    );
     return repos;
   }
 
   async function refreshFromGitHub() {
-    let repos = await fetchReposWithTopics();
+    let repos = await fetchReposList();
     repos = repos
       .filter((r) => !r.fork && !r.archived && !r.is_template && !isMetaRepo(r))
       .sort(
@@ -474,12 +496,12 @@ $(document).ready(function () {
       )
       .slice(0, MAX_REPOS);
 
-    await enrichRepos(repos);
+    await enrichReposParallel(repos);
     const html = repos.map(repoCard);
     mountCards(html);
   }
 
-  /* ----------- allow wheel scroll inside tags box ----------- */
+  /* ---------------- Allow wheel scroll in chips box ---------------- */
   $(document).on("wheel", ".tags", function (e) {
     const el = this,
       evt = e.originalEvent;
@@ -492,16 +514,21 @@ $(document).ready(function () {
     }
   });
 
-  /* ----------- Boot ----------- */
+  /* ---------------- Boot ---------------- */
   (async function init() {
     try {
-      await renderFromLocalJSON(); // About + Skills + JSON projects
+      await renderFromLocalJSON();
     } catch {
-      startTyping(); // fallback typing
+      // if portfolio.json missing, at least show typing effect
+      startTyping();
     }
 
     try {
-      await refreshFromGitHub(); // replace with live GitHub cards
+      // Prefer cached GitHub JSON written by Actions
+      const usedCache = await renderFromCachedGH();
+
+      // Fallback to live GitHub (unauthenticated)
+      if (!usedCache) await refreshFromGitHub();
     } catch (e) {
       console.warn("GitHub load failed; keeping JSON projects.", e);
     }
