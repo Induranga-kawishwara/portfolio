@@ -2,7 +2,13 @@ name: Build repos.json
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 3 * * *" # daily
+    - cron: "17 3 * * *"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-repos-json.yml"
+      - "assets/**"
+      - "index.html"
 
 permissions:
   contents: write
