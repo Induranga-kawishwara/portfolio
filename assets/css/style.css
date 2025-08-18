@@ -15,6 +15,7 @@ body {
   font-family: "Poppins", sans-serif;
   overflow-x: hidden; /* prevent horizontal scroll from full-bleed canvas */
 }
+
 .main {
   visibility: visible;
 }
@@ -100,7 +101,7 @@ section .title::after {
   justify-content: space-between;
 }
 
-/* Navbar */
+/* ======================= Navbar ======================= */
 .navbar {
   position: fixed;
   width: 100%;
@@ -130,6 +131,7 @@ section .title::after {
 .navbar.sticky .logo a span {
   color: #fff;
 }
+
 .navbar .menu li {
   list-style: none;
   display: inline-block;
@@ -195,8 +197,10 @@ section.home,
 #particles-js {
   position: relative;
   width: 100%;
-  min-height: 100vh; /* fallback */
-  height: 100dvh; /* correct on mobile with dynamic bars */
+  min-height: 100vh; /* desktop fallback */
+  height: 100vh;
+  min-height: 100svh; /* mobile safe viewport */
+  height: 100svh;
   background: #000;
   background-size: cover;
   background-attachment: fixed;
@@ -207,13 +211,15 @@ section.home,
   font-family: "Ubuntu", sans-serif;
 }
 
-/* Force the particles canvas to fill its parent exactly */
+/* Force the particles canvas to fill its parent exactly and not block clicks */
 #particles-js > canvas {
   position: absolute !important;
   inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
   display: block;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* Hero text overlay */
@@ -221,7 +227,7 @@ section.home,
   margin-top: 15%;
   position: absolute;
   width: 100%;
-  z-index: 1;
+  z-index: 1; /* above the canvas */
 }
 .home .home-content .text-1 {
   font-size: 27px;
@@ -249,6 +255,8 @@ section.home,
   border-radius: 10px;
   border: 2px solid crimson;
   transition: 0.25s;
+  position: relative; /* ensure clickable over canvas */
+  z-index: 2;
 }
 .home .home-content a:hover {
   color: crimson;
@@ -258,7 +266,7 @@ section.home,
 /* ======================= About ======================= */
 .about .title::after {
   content: "Who I Am";
-  background: #000000;
+  background: #000;
 }
 .about .title::before {
   background: #fff;
@@ -330,7 +338,7 @@ section.home,
 /* ======================= Skills ======================= */
 .skills .title::after {
   content: "What I Know";
-  background: #000000;
+  background: #000;
 }
 .skills .title::before {
   background: #fff;
@@ -354,7 +362,6 @@ section.home,
   transform: translateY(-5px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
 }
-
 .skill-header {
   text-align: center;
   margin-bottom: 28px;
@@ -496,6 +503,7 @@ section.home,
   content: "What I Did";
   background: #111;
 }
+
 /* equal height items */
 .Projects .carousel .owl-stage {
   display: flex;
@@ -507,6 +515,7 @@ section.home,
 :root {
   --card-height: 480px;
 }
+
 .Projects .carousel .card {
   background: #222;
   border-radius: 16px;
@@ -1020,20 +1029,67 @@ footer .social-icons a:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* Phone-friendly hero & typography */
+@media (max-width: 600px) {
+  section.home {
+    padding: 0 !important;
+  }
+
+  .home .max-width {
+    margin-top: 0;
+    top: 22svh;
+    left: 0;
+    right: 0;
+    padding: 0 18px;
+  }
+
+  .home .home-content .text-1 {
+    font-size: clamp(14px, 4.2vw, 20px);
+  }
+  .home .home-content .text-2 {
+    font-size: clamp(32px, 10vw, 54px);
+    line-height: 1.15;
+    word-break: break-word;
+  }
+  .home .home-content .text-3 {
+    font-size: clamp(18px, 5.2vw, 26px);
+    line-height: 1.25;
+  }
+  .home .home-content a {
+    font-size: clamp(14px, 4vw, 18px);
+    padding: 10px 16px;
+    border-radius: 8px;
+  }
+
+  .max-width {
+    padding: 0 18px;
+  }
+}
+
+/* Small tablets */
+@media (min-width: 601px) and (max-width: 820px) {
+  .home .max-width {
+    top: 24svh;
+    padding: 0 28px;
+  }
+  .home .home-content .text-2 {
+    font-size: clamp(40px, 8.5vw, 64px);
+  }
+  .home .home-content .text-3 {
+    font-size: clamp(20px, 4.8vw, 28px);
+  }
+}
+
 @media (max-width: 690px) {
   .max-width {
     padding: 0 23px;
-  }
-  .home .home-content .text-2 {
-    font-size: 60px;
-  }
-  .home .home-content .text-3 {
-    font-size: 32px;
   }
   .home .home-content a {
     font-size: 20px;
   }
 }
+
 @media (max-width: 620px) {
   :root {
     --card-height: 520px;
@@ -1054,6 +1110,7 @@ footer .social-icons a:hover {
     width: 100%;
   }
 }
+
 @media (max-width: 500px) {
   .error,
   .popup {
