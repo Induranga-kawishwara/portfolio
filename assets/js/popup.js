@@ -1,4 +1,3 @@
-// assets/js/popup.js
 function sendemail() {
   var online = navigator.onLine;
 

@@ -13,6 +13,7 @@ body {
   background: #000;
   color: #fff;
   font-family: "Poppins", sans-serif;
+  overflow-x: hidden; /* prevent horizontal scroll from full-bleed canvas */
 }
 .main {
   visibility: visible;
@@ -99,9 +100,7 @@ section .title::after {
   justify-content: space-between;
 }
 
-/* =========================================================
-   Navbar
-========================================================= */
+/* Navbar */
 .navbar {
   position: fixed;
   width: 100%;
@@ -185,24 +184,44 @@ section .title::after {
   filter: brightness(90%);
 }
 
-/* =========================================================
-   Home (particles background)
-========================================================= */
+/* ======================= Home / Particles ======================= */
+/* Remove section padding from the hero so the canvas can truly fill the screen */
+section.home,
 #particles-js {
-  height: 105vh;
-  min-height: 500px;
+  padding: 0 !important;
+}
+
+/* Full-viewport particles container */
+#particles-js {
+  position: relative;
+  width: 100%;
+  min-height: 100vh; /* fallback */
+  height: 100dvh; /* correct on mobile with dynamic bars */
   background: #000;
   background-size: cover;
   background-attachment: fixed;
   background-position: 50% 50%;
   background-repeat: no-repeat;
   color: #fff;
+  overflow: hidden; /* avoid tiny scrollbars from the canvas */
   font-family: "Ubuntu", sans-serif;
 }
+
+/* Force the particles canvas to fill its parent exactly */
+#particles-js > canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Hero text overlay */
 .home .max-width {
   margin-top: 15%;
   position: absolute;
   width: 100%;
+  z-index: 1;
 }
 .home .home-content .text-1 {
   font-size: 27px;
@@ -236,14 +255,11 @@ section .title::after {
   background: none;
 }
 
-/* =========================================================
-   About
-========================================================= */
+/* ======================= About ======================= */
 .about .title::after {
   content: "Who I Am";
   background: #000000;
 }
-/* Make underline visible on dark bg */
 .about .title::before {
   background: #fff;
 }
@@ -302,8 +318,7 @@ section .title::after {
   color: #111;
   font-weight: 600;
   border: 1px solid #eee;
-  transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease,
-    color 0.2s ease;
+  transition: transform 0.12s, box-shadow 0.2s, background 0.2s, color 0.2s;
 }
 .about-link:hover {
   transform: translateY(-1px);
@@ -312,17 +327,15 @@ section .title::after {
   color: #fff;
 }
 
-/* =========================================================
-   Skills
-========================================================= */
+/* ======================= Skills ======================= */
 .skills .title::after {
   content: "What I Know";
   background: #000000;
 }
-/* Make underline visible on dark bg */
 .skills .title::before {
   background: #fff;
 }
+
 .skills-content .columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(260px, 1fr));
@@ -341,6 +354,7 @@ section .title::after {
   transform: translateY(-5px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
 }
+
 .skill-header {
   text-align: center;
   margin-bottom: 28px;
@@ -477,9 +491,7 @@ section .title::after {
   -webkit-text-fill-color: transparent;
 }
 
-/* =========================================================
-   Projects (Owl Carousel)
-========================================================= */
+/* ======================= Projects ======================= */
 .Projects .title::after {
   content: "What I Did";
   background: #111;
@@ -624,7 +636,6 @@ section .title::after {
 .tag-fw {
   border-color: rgba(220, 20, 60, 0.6);
 }
-/* Improve contrast on hover card */
 .Projects .carousel .card:hover .tag {
   background: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.35);
@@ -666,9 +677,7 @@ section .title::after {
   background: crimson !important;
 }
 
-/* =========================================================
-   Contact
-========================================================= */
+/* ======================= Contact ======================= */
 .contact .title::after {
   background: #111;
   content: "Get In Touch";
@@ -776,7 +785,7 @@ section .title::after {
 }
 .contact textarea {
   min-height: 140px;
-  resize: none;
+  resize: vertical;
   line-height: 1.45;
 }
 
@@ -812,9 +821,7 @@ button:focus-visible {
   border-radius: 8px;
 }
 
-/* =========================================================
-   Popups
-========================================================= */
+/* ======================= Popups ======================= */
 .popup,
 .error {
   width: 400px;
@@ -916,9 +923,7 @@ button:focus-visible {
   background: none;
 }
 
-/* =========================================================
-   Footer
-========================================================= */
+/* ======================= Footer ======================= */
 footer {
   background: #fff;
   padding: 15px 23px;
@@ -943,9 +948,7 @@ footer .social-icons a:hover {
   color: crimson;
 }
 
-/* =========================================================
-   Responsive
-========================================================= */
+/* ======================= Responsive ======================= */
 @media (max-width: 1104px) {
   .about .about-content .left img {
     width: 300px;
