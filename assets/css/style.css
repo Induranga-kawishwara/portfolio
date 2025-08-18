@@ -785,7 +785,7 @@ section.home,
 }
 .contact textarea {
   min-height: 140px;
-  resize: vertical;
+  resize: none;
   line-height: 1.45;
 }
 
