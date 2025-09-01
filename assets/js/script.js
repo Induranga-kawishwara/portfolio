@@ -103,39 +103,39 @@ $(document).ready(function () {
   };
 
   const ICONS = {
-    java: "fab fa-java",
-    python: "fab fa-python",
-    php: "fab fa-php",
-    mysql: "fas fa-database",
-    sqlite: "fas fa-database",
-    mongodb: "fas fa-database",
-    r: "fas fa-chart-line",
-    html: "fab fa-html5",
-    html5: "fab fa-html5",
-    css: "fab fa-css3-alt",
-    css3: "fab fa-css3-alt",
-    javascript: "fab fa-js-square",
-    js: "fab fa-js-square",
-    typescript: "fab fa-js",
-    react: "fab fa-react",
-    bootstrap: "fab fa-bootstrap",
-    "tailwind css": "fas fa-wind",
-    tailwind: "fas fa-wind",
-    "node.js": "fab fa-node",
-    node: "fab fa-node",
-    express: "fas fa-route",
-    "spring boot": "fas fa-leaf",
-    spring: "fas fa-seedling",
-    django: "fas fa-leaf",
-    flask: "fas fa-flask",
-    git: "fab fa-git-alt",
-    github: "fab fa-github",
-    docker: "fab fa-docker",
-    figma: "fab fa-figma",
-    swift: "fab fa-swift",
-    kotlin: "fas fa-mobile-alt",
-    "next.js": "fas fa-code-branch",
-    fastapi: "fas fa-bolt",
+    java: "fa-brands fa-java",
+    python: "fa-brands fa-python",
+    php: "fa-brands fa-php",
+    mysql: "fa-solid fa-database",
+    sqlite: "fa-solid fa-database",
+    mongodb: "fa-solid fa-database",
+    r: "fa-solid fa-chart-line",
+    html: "fa-brands fa-html5",
+    html5: "fa-brands fa-html5",
+    css: "fa-brands fa-css3-alt",
+    css3: "fa-brands fa-css3-alt",
+    javascript: "fa-brands fa-js",
+    js: "fa-brands fa-js",
+    typescript: "fa-solid fa-code",
+    react: "fa-brands fa-react",
+    bootstrap: "fa-brands fa-bootstrap",
+    "tailwind css": "fa-solid fa-wind",
+    tailwind: "fa-solid fa-wind",
+    "node.js": "fa-brands fa-node",
+    node: "fa-brands fa-node",
+    express: "fa-solid fa-route",
+    "spring boot": "fa-solid fa-leaf",
+    spring: "fa-solid fa-seedling",
+    django: "fa-solid fa-leaf",
+    flask: "fa-solid fa-flask",
+    git: "fa-brands fa-git-alt",
+    github: "fa-brands fa-github",
+    docker: "fa-brands fa-docker",
+    figma: "fa-brands fa-figma",
+    swift: "fa-brands fa-swift",
+    kotlin: "fa-solid fa-mobile-screen",
+    "next.js": "fa-solid fa-code-branch",
+    fastapi: "fa-solid fa-bolt",
   };
 
   /* ---------------- Utils ---------------- */
@@ -243,7 +243,7 @@ $(document).ready(function () {
       (items || []).forEach((name) => {
         const icon = pickIcon(name);
         $items.append(
-          `<div class="skill-item"><i class="${icon}"></i><span>${name}</span></div>`
+          `<div class="skill-item"><i class="${icon}"  style="color: #0a0a0a;"></i><span>${name}</span></div>`
         );
       });
       $col.append($header).append($items);
