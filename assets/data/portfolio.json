@@ -6,7 +6,7 @@
     "photo": "assets/images/photo.png"
   },
   "about": {
-    "bio": "I am a second-year student studying software engineering, with a strong interest in using technology to solve real-world problems. My background spans JavaScript, Java, Python and modern web tech. I understand OOP and software development practices and I’m always learning new tools to stay current."
+    "bio": "Software Engineer with a BEng (Hons) from the University of Westminster (Second Upper) and 2 years at Bug Zero. I build secure, scalable web apps and data/ML features using React, Node.js, Python/Flask, CodeIgniter 4, SQL Server/Azure SQL, MySQL, and MongoDB. Comfortable with microservices, JWT auth, Docker/Kubernetes, and CI/CD. I care about clean code, clear docs, and measurable impact."
   },
   "links": {
     "github": "https://github.com/Induranga-kawishwara",
