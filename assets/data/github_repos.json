@@ -7,8 +7,8 @@
     "description": "Live Site",
     "stargazers_count": 4,
     "created_at": "2023-04-01T16:29:36Z",
-    "updated_at": "2026-02-18T05:03:39Z",
-    "pushed_at": "2026-02-18T05:03:35Z",
+    "updated_at": "2026-02-19T05:03:29Z",
+    "pushed_at": "2026-02-19T05:03:25Z",
     "owner": {
       "login": "Induranga-kawishwara"
     },
@@ -33,10 +33,7 @@
       "login": "Induranga-kawishwara"
     },
     "_languages": [
-      "Jupyter Notebook",
-      "JavaScript",
-      "Python",
-      "HTML"
+      "Jupyter Notebook"
     ],
     "_topics": []
   },
